@@ -55,8 +55,8 @@ def menu_principal(id_manager):
     rq = sql_conn.get_data_equipes_by_managers(conn,id_manager)
     affichage_equipes(rq)
 
-    changement_joueur = Prompt.ask(" Voulez-vous changer la disposition des joueurs ? (o/n)", choices=["o", "n"])
-    if changement_joueur == "o":
+    changer_equipe = Prompt.ask(" Voulez-vous gérer votre équipe ? (o/n)", choices=["o", "n"])
+    if changer_equipe == "o":
         gestion_equipe()
     else:
         gestion_match_progression()
@@ -69,6 +69,23 @@ def gestion_equipe():
     Si le manager modifie les joueurs, demander à l'utilisateur ce qu'il veut modifier (poste).
     Retour au menu principal.
     """
+
+    changement_joueur = Prompt.ask(" Voulez-vous changer un joueur ? (Oui/Non)", choices=["o", "n"])
+    if changement_joueur == "o":
+        
+    
+    
+    
+    choix_equipe = Prompt.ask(" Quelle composition voulez-vous jouer ? (Offensive/Défensive/Milieu)", choices=["o", "d", "p"])
+    if choix_equipe == "o":
+        print(" Votre équipe sera offensive")
+    elif choix_equipe == "d":
+        print(" Votre équipe sera défensive")
+    else:
+        print(" Votre équipe sera polyvalente")
+
+    
+
 
     
 
