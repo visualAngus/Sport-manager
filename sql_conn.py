@@ -1,4 +1,8 @@
 import sqlite3
+from rich.console import Console
+from rich.prompt import Prompt
+
+console = Console()
 
 def init_connection():
     conn = sqlite3.connect("sport_manager.db")
@@ -19,6 +23,10 @@ def get_all_joueurs_by_equipe(conn, equipe_id):
     cursor.execute("SELECT * FROM joueurs WHERE id_equipe = ?", (equipe_id,))
     return cursor.fetchall()
 
-conn = init_connection()
-for i in get_all_joueurs_by_equipe(conn, get_equipes_by_manageur(conn, 1)[0][0]):
-    print(i)
+def choix_multiple(options, prompt="Please choose an option:"):
+    for idx, option in enumerate(options, start=1):
+        console.print(f"[cyan]{idx}.[/cyan] {option}")
+    choice = Prompt.ask(prompt, choices=[str(i) for i in range(1, len(options) + 1)])
+    return options[int(choice) - 1]
+
+choix_multiple(["Option 1", "Option 2", "Option 3"])
