@@ -54,6 +54,12 @@ def menu_principal(id_manager):
 
     rq = sql_conn.get_data_equipes_by_managers(conn,id_manager)
     affichage_equipes(rq)
+
+    changement_joueur = Prompt.ask(" Voulez-vous changer la disposition des joueurs ? (o/n)", choices=["o", "n"])
+    if changement_joueur == "o":
+        gestion_equipe()
+    else:
+        gestion_match_progression()
     
 
 def gestion_equipe():
@@ -64,6 +70,7 @@ def gestion_equipe():
     Retour au menu principal.
     """
 
+    
 
 def gestion_match_progression():
     """
