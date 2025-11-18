@@ -71,7 +71,7 @@ def gestion_equipe():
     """
 
     changement_joueur = Prompt.ask(" Voulez-vous changer un joueur ? (Oui/Non)", choices=["o", "n"])
-    if changement_joueur == "o":
+    
         
     
     
