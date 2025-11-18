@@ -19,6 +19,7 @@ def menu_accueil():
     print(" BIENVENUE DANS SPORT MANAGER ")
     choix_manager = input( " Choisissez votre MANAGER :")
     
+    
 
 
 menu_accueil()
