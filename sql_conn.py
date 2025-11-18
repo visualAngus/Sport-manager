@@ -10,7 +10,12 @@ def init_connection():
 
 def get_all_manageurs(conn):
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM manageur")
+    cursor.execute("SELECT NOM FROM manageur")
+    return cursor.fetchall()
+
+def get_manager_id_from_nom(conn,nom):
+    cursor = conn.cursor()
+    cursor.execute(f"SELECT id FROM manageur WHERE NOM = '{nom}'")
     return cursor.fetchall()
 
 def get_equipes_by_manageur(conn, manageur_id):
@@ -28,5 +33,3 @@ def choix_multiple(options, prompt="Please choose an option:"):
         console.print(f"[cyan]{idx}.[/cyan] {option}")
     choice = Prompt.ask(prompt, choices=[str(i) for i in range(1, len(options) + 1)])
     return options[int(choice) - 1]
-
-choix_multiple(["Option 1", "Option 2", "Option 3"])

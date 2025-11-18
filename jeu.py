@@ -6,8 +6,17 @@ from rich.console import Console
 from rich.table import Table
 from rich.panel import Panel 
 from rich.text import Text
+from rich.prompt import Prompt
 
 console = Console()
+
+conn = sql_conn.init_connection()
+
+def choix_multiple(options, prompt=" Choisissez votre MANAGER :"):
+    for idx, option in enumerate(options, start=1):
+        console.print(f"[cyan]{idx}.[/cyan] {option}")
+    choice = Prompt.ask(prompt, choices=[str(i) for i in range(1, len(options) + 1)])
+    return options[int(choice) - 1]
 
 def menu_accueil():
     """
@@ -17,12 +26,21 @@ def menu_accueil():
     """
 
     print(" BIENVENUE DANS SPORT MANAGER ")
-    choix_manager = input( " Choisissez votre MANAGER :")
-    
-    
+
+    liste_manager = sql_conn.get_all_manageurs(conn)
+    liste_prenom = []
+    for manager in liste_manager:
+        liste_prenom.append(manager[0])
+
+    choix_user =choix_multiple(liste_prenom)
+    id_manager = sql_conn.get_manager_id_from_nom(conn,choix_user)[0][0]
+    print(f" Vous avez choisi :" {choix_user}"")
+
+    return id_manager
 
 
 menu_accueil()
+
 
 def menu_principal():
     """
@@ -53,3 +71,9 @@ def quitter():
     """
     Le joueur quitte le jeu.
     """
+
+
+
+
+if __name__ == "__main__":
+    menu_accueil
