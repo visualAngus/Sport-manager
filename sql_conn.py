@@ -18,6 +18,17 @@ def get_manager_id_from_nom(conn,nom):
     cursor.execute(f"SELECT id FROM manageur WHERE NOM = '{nom}'")
     return cursor.fetchall()
 
+def get_data_equipes_by_managers(conn,id_manager):
+    cursor = conn.cursor()
+    cursor.execute(f"""SELECT E.NOM , SUM(j.BLESSE), COUNT(j.NOM), E.id
+                        FROM EQUIPES E 
+                        INNER JOIN JOUEURS j on j.id_equipe = E.id 
+                        where E.id_manageur = {id_manager}
+                        GROUP BY E.NOM""")
+    return cursor.fetchall()
+
+
+
 def get_equipes_by_manageur(conn, manageur_id):
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM equipes WHERE id_manageur = ?", (manageur_id,))

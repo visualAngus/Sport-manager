@@ -8,9 +8,7 @@ from rich.panel import Panel
 from rich.text import Text
 from rich.prompt import Prompt
 
-console = Console()
 
-conn = sql_conn.init_connection()
 
 def choix_multiple(options, prompt=" Choisissez votre MANAGER :"):
     for idx, option in enumerate(options, start=1):
@@ -18,12 +16,20 @@ def choix_multiple(options, prompt=" Choisissez votre MANAGER :"):
     choice = Prompt.ask(prompt, choices=[str(i) for i in range(1, len(options) + 1)])
     return options[int(choice) - 1]
 
+def affichage_equipes(liste_equipe, prompt=" Choisissez votre EQUIPE :"):
+    for idx, option in enumerate(liste_equipe, start=1):
+        console.print(f"[cyan]{idx}.[/cyan] {option[0]} {option[1]}/{option[2]}")
+    choice = Prompt.ask(prompt, choices=[str(i) for i in range(1, len(liste_equipe) + 1)])
+    return choice
+    
+
 def menu_accueil():
     """
     Affiche le menu d'accueil du jeu.
 
     - Choisir son manager et commencer la partie.
     """
+    print("\033c", end="")
 
     print(" BIENVENUE DANS SPORT MANAGER ")
 
@@ -40,10 +46,15 @@ def menu_accueil():
 
 
 
-def menu_principal():
+def menu_principal(id_manager):
     """
     - Le joueur peut gérer son équipe, gérer sa progression et ses matchs, ou quitter.
     """
+    print("\033c", end="")
+
+    rq = sql_conn.get_data_equipes_by_managers(conn,id_manager)
+    affichage_equipes(rq)
+    
 
 def gestion_equipe():
     """
@@ -74,4 +85,7 @@ def quitter():
 
 
 if __name__ == "__main__":
-    menu_accueil()
+    console = Console()
+    conn = sql_conn.init_connection()
+    id_manager = menu_accueil()
+    menu_principal(id_manager)
