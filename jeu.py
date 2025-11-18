@@ -34,12 +34,10 @@ def menu_accueil():
 
     choix_user =choix_multiple(liste_prenom)
     id_manager = sql_conn.get_manager_id_from_nom(conn,choix_user)[0][0]
-    print(f" Vous avez choisi :" {choix_user}"")
+    print(f" Vous avez choisi : {choix_user}")
 
     return id_manager
 
-
-menu_accueil()
 
 
 def menu_principal():
@@ -76,4 +74,4 @@ def quitter():
 
 
 if __name__ == "__main__":
-    menu_accueil
+    menu_accueil()
