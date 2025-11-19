@@ -70,16 +70,17 @@ def gestion_equipe():
     Retour au menu principal.
     """
 
+def changement_joueur():
     changement_joueur = Prompt.ask(" Voulez-vous changer un joueur ? (Oui/Non)", choices=["o", "n"])
     
         
     
     
-    
-    choix_equipe = Prompt.ask(" Quelle composition voulez-vous jouer ? (Offensive/Défensive/Milieu)", choices=["o", "d", "p"])
-    if choix_equipe == "o":
+def choix_equipe():
+    choix = Prompt.ask(" Quelle composition voulez-vous jouer ? (Offensive/Défensive/Milieu)", choices=["o", "d", "p"])
+    if choix == "o":
         print(" Votre équipe sera offensive")
-    elif choix_equipe == "d":
+    elif choix == "d":
         print(" Votre équipe sera défensive")
     else:
         print(" Votre équipe sera polyvalente")
