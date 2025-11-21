@@ -39,6 +39,24 @@ def get_all_joueurs_by_equipe(conn, equipe_id):
     cursor.execute("SELECT * FROM joueurs WHERE id_equipe = ?", (equipe_id,))
     return cursor.fetchall()
 
+def create_player(conn,nom,prenom,poste):
+    cursor = conn.cursor()
+    # [viteesse, endurance, force, technique]
+    random = [random.randint(50, 100) for _ in range(4)]
+    cursor.execute(f"INSERT INTO JOUEURS (NOM, PRENOM, POSTE, BLESSE, id_equipe, vitesse, endurance, force, technique) VALUES ('{nom}', '{prenom}', '{poste}', 0, NULL, {random[0]}, {random[1]}, {random[2]}, {random[3]})")
+    conn.commit()
+    return cursor.lastrowid
+
+def get_all_postes(conn):
+    cursor = conn.cursor()
+    cursor.execute("SELECT DISTINCT POSTE FROM JOUEURS")
+    return [row[0] for row in cursor.fetchall()]
+
+def get_all_sans_equipe(conn):
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM JOUEURS WHERE id_equipe IS NULL")
+    return cursor.fetchall()
+
 def choix_multiple(options, prompt="Please choose an option:"):
     for idx, option in enumerate(options, start=1):
         console.print(f"[cyan]{idx}.[/cyan] {option}")

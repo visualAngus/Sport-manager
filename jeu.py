@@ -11,6 +11,7 @@ from rich.prompt import Prompt
 
 
 def choix_multiple(options, prompt=" Choisissez votre MANAGER :"):
+    print("\033c", end="")
     for idx, option in enumerate(options, start=1):
         console.print(f"[cyan]{idx}.[/cyan] {option}")
     choice = Prompt.ask(prompt, choices=[str(i) for i in range(1, len(options) + 1)])
@@ -22,6 +23,15 @@ def affichage_equipes(liste_equipe, prompt=" Choisissez votre EQUIPE :"):
     choice = Prompt.ask(prompt, choices=[str(i) for i in range(1, len(liste_equipe) + 1)])
     return choice
     
+def question_generale(prompt="",question= None):
+    if question:
+        console.print(Panel.fit(question, title="QUESTION", border_style="red"))
+    choix = Prompt.ask(prompt, choices=["o", "n"])
+    if choix == "o":
+        return True
+    else:
+        return False
+
 
 def menu_accueil():
     """
@@ -55,11 +65,13 @@ def menu_principal(id_manager):
     rq = sql_conn.get_data_equipes_by_managers(conn,id_manager)
     affichage_equipes(rq)
 
-    changer_equipe = Prompt.ask(" Voulez-vous gérer votre équipe ? (o/n)", choices=["o", "n"])
-    if changer_equipe == "o":
+    # changer_equipe = Prompt.ask(" Voulez-vous gérer votre équipe ? (o/n)", choices=["o", "n"])
+    gerer_equipe = question_generale(question=" Voulez-vous gérer votre équipe ?")
+    if gerer_equipe:
         gestion_equipe()
     else:
         gestion_match_progression()
+    
     
 
 def gestion_equipe():
@@ -69,6 +81,13 @@ def gestion_equipe():
     Si le manager modifie les joueurs, demander à l'utilisateur ce qu'il veut modifier (poste).
     Retour au menu principal.
     """
+    liste_possibilites = ["Ajouter un joueur", "Changer la composition de l'équipe", "Retour au menu principal"]
+    choix = choix_multiple(liste_possibilites, prompt=" Que voulez-vous faire ?")
+    print(choix)
+
+
+
+    
 
 def changement_joueur():
     changement_joueur = Prompt.ask(" Voulez-vous changer un joueur ? (Oui/Non)", choices=["o", "n"])
@@ -85,6 +104,7 @@ def choix_equipe():
     else:
         print(" Votre équipe sera polyvalente")
 
+    choix_equipe()
     
 
 
