@@ -1,6 +1,7 @@
 import sqlite3
 from rich.console import Console
 from rich.prompt import Prompt
+import random
 
 console = Console()
 
@@ -15,7 +16,7 @@ def get_all_manageurs(conn):
 
 def get_manager_id_from_nom(conn,nom):
     cursor = conn.cursor()
-    cursor.execute(f"SELECT id FROM manageur WHERE NOM = '{nom}'")
+    cursor.execute(f"SELECT id, NOM, PRENOM FROM manageur WHERE NOM = '{nom}'")
     return cursor.fetchall()
 
 def get_data_equipes_by_managers(conn,id_manager):
@@ -39,17 +40,26 @@ def get_all_joueurs_by_equipe(conn, equipe_id):
     cursor.execute("SELECT * FROM joueurs WHERE id_equipe = ?", (equipe_id,))
     return cursor.fetchall()
 
-def create_player(conn,nom,prenom,poste):
+def get_poste_id_by_nom(conn, poste_nom):
+    cursor = conn.cursor()
+    cursor.execute("SELECT id FROM POSTES WHERE nom_poste = ?", (poste_nom,))
+    return cursor.fetchone()[0]
+
+def create_player(conn,nom,prenom,poste_id,equipe_id=None):
+    if equipe_id is None:
+        # Fail-safe: if no team is provided, do not create the player
+        return None
     cursor = conn.cursor()
     # [viteesse, endurance, force, technique]
-    random = [random.randint(50, 100) for _ in range(4)]
-    cursor.execute(f"INSERT INTO JOUEURS (NOM, PRENOM, POSTE, BLESSE, id_equipe, vitesse, endurance, force, technique) VALUES ('{nom}', '{prenom}', '{poste}', 0, NULL, {random[0]}, {random[1]}, {random[2]}, {random[3]})")
+    random_ = [random.randint(50, 100) for _ in range(4)]
+    poste = get_poste_id_by_nom(conn, poste_id)
+    cursor.execute(f"INSERT INTO JOUEURS (NOM, PRENOM, id_1, BLESSE, id_equipe, vitesse, endurence, force, technique) VALUES ('{nom}', '{prenom}', '{poste}', 0, {equipe_id}, {random_[0]}, {random_[1]}, {random_[2]}, {random_[3]})")
     conn.commit()
     return cursor.lastrowid
 
 def get_all_postes(conn):
     cursor = conn.cursor()
-    cursor.execute("SELECT DISTINCT POSTE FROM JOUEURS")
+    cursor.execute("SELECT nom_poste FROM POSTES")
     return [row[0] for row in cursor.fetchall()]
 
 def get_all_sans_equipe(conn):
