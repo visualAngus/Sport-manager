@@ -50,7 +50,7 @@ def menu_accueil():
     - Choisir son manager et commencer la partie.
     """
     print("\033c", end="")
-
+    
     print(" BIENVENUE DANS SPORT MANAGER ")
 
     liste_manager = sql_conn.get_all_manageurs(conn)
@@ -76,9 +76,16 @@ def menu_principal(id_manager,nom_manager,prenom_manager):
     print("\033c", end="")
 
     rq = sql_conn.get_data_equipes_by_managers(conn,id_manager)
-    equipe_id = rq[0][3]
-    nom_equipe = rq[0][0]
-    affichage_equipes(rq)
+    # ajouter la possiblité de creer une équipe
+    rq.append(('Créer une nouvelle équipe','','',''))
+    choix = affichage_equipes(rq)
+    if choix == str(len(rq)):
+        nom_equipe = Prompt.ask(" Entrez le NOM de votre nouvelle équipe :")
+        equipe_id = sql_conn.create_team(conn, nom_equipe, id_manager)
+        console.print(f"[green]L'équipe {nom_equipe} a été créée avec succès.[/green]")
+    else:
+        equipe_id = rq[int(choix)-1][3]
+        nom_equipe = rq[int(choix)-1][0]
 
     while True:
         time.sleep(0.1)
@@ -192,7 +199,6 @@ def gestion_match_progression():
     Mettre à jour les compétences et décompter les blessures.
     Retour au menu principal.
     """
-    
 
 def quitter():
     """

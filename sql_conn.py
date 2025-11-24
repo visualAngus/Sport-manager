@@ -23,7 +23,7 @@ def get_data_equipes_by_managers(conn,id_manager):
     cursor = conn.cursor()
     cursor.execute(f"""SELECT E.NOM , SUM(j.BLESSE), COUNT(j.NOM), E.id
                         FROM EQUIPES E 
-                        INNER JOIN JOUEURS j on j.id_equipe = E.id 
+                        LEFT JOIN JOUEURS j on j.id_equipe = E.id 
                         where E.id_manageur = {id_manager}
                         GROUP BY E.NOM""")
     return cursor.fetchall()
@@ -81,3 +81,9 @@ def update_joueur_poste(conn, joueur_id, nouveau_poste_id):
     cursor = conn.cursor()
     cursor.execute("UPDATE JOUEURS SET id_1 = ? WHERE id = ?", (nouveau_poste_id, joueur_id))
     conn.commit()
+
+def create_team(conn, nom_equipe, id_manager):
+    cursor = conn.cursor()
+    cursor.execute("INSERT INTO EQUIPES (NOM, id_manageur) VALUES (?, ?)", (nom_equipe, id_manager))
+    conn.commit()
+    return cursor.lastrowid
