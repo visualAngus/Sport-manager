@@ -202,7 +202,7 @@ def affichage_joueurs_par_equipe(equipe_id=None):
         table.add_row(
             f"[cyan]{joueur[1]}[/cyan]", 
             joueur[2], 
-            "Oui" if joueur[3] == 0 else "Non", 
+            "Oui" if joueur[3] == 1 else "Non", 
             str(joueur[4]), 
             str(joueur[5]), 
             str(joueur[6])
