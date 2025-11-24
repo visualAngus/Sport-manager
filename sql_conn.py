@@ -35,14 +35,23 @@ def get_equipes_by_manageur(conn, manageur_id):
     cursor.execute("SELECT * FROM equipes WHERE id_manageur = ?", (manageur_id,))
     return cursor.fetchall()
 
-def get_all_joueurs_by_equipe(conn, equipe_id):
-    cursor = conn.cursor()
-    cursor.execute("""
-                    SELECT joueurs.id ,CONCAT(NOM, ' ', PRENOM) AS NOM_COMPLET,p.nom_poste 
-                    FROM joueurs 
-                    INNER JOIN POSTES p on p.id = joueurs.id_1 
-                    WHERE id_equipe = ?""", (equipe_id,))
-    return cursor.fetchall()
+def get_all_joueurs_by_equipe(conn, equipe_id,a = False):
+    if a:
+        cursor = conn.cursor()
+        cursor.execute("""
+                        SELECT j.id ,CONCAT(NOM, ' ', PRENOM) AS NOM_COMPLET,p.nom_poste, j.BLESSE,j.vitesse,j.endurence,j.force,j.technique
+                        FROM joueurs  j
+                        INNER JOIN POSTES p on p.id = j.id_1 
+                        WHERE id_equipe = ?""", (equipe_id,))
+        return cursor.fetchall()
+    else:
+        cursor = conn.cursor()
+        cursor.execute("""
+                        SELECT joueurs.id ,CONCAT(NOM, ' ', PRENOM) AS NOM_COMPLET,p.nom_poste 
+                        FROM joueurs 
+                        INNER JOIN POSTES p on p.id = joueurs.id_1 
+                        WHERE id_equipe = ?""", (equipe_id,))
+        return cursor.fetchall()
 
 def get_poste_id_by_nom(conn, poste_nom):
     cursor = conn.cursor()
@@ -70,6 +79,77 @@ def get_all_sans_equipe(conn):
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM JOUEURS WHERE id_equipe IS NULL")
     return cursor.fetchall()
+
+def get_equipes_name_by_id(conn, equipe_id):
+    cursor = conn.cursor()
+    cursor.execute("SELECT NOM FROM EQUIPES WHERE id = ?", (equipe_id,))
+    return cursor.fetchone()[0]
+
+def get_all_equipes_except_id(conn, equipe_id):
+    cursor = conn.cursor()
+    cursor.execute("""
+                    WITH nb_joueur_by_nom AS (
+                    SELECT 
+                            e.id,
+                            e.nom,
+                            (COUNT(j.nom) - SUM(j.blesse)) AS nb_joueur_dispo,
+                            COUNT(j.nom) as nb_joueur
+                        FROM equipes e
+                        INNER JOIN joueurs j ON j.id_equipe = e.id
+                        WHERE e.id != ?
+                        GROUP BY e.id, e.nom
+                    )
+                    SELECT nom
+                    FROM nb_joueur_by_nom
+                    WHERE nb_joueur_dispo >= 5 and nb_joueur >= 5
+                    """, (equipe_id,))
+    return [row[0] for row in cursor.fetchall()]
+
+def get_equipe_id_by_name(conn, equipe_name):
+    cursor = conn.cursor()
+    cursor.execute("SELECT id FROM EQUIPES WHERE NOM = ?", (equipe_name,))
+    return cursor.fetchone()[0]
+
+def get_all_matchs_by_equipe(conn, equipe_id):
+    cursor = conn.cursor()
+    cursor.execute("""
+                    SELECT 
+                        m.id,
+                        e1.NOM AS equipe1,
+                        e2.NOM AS equipe2,
+                        m.SCORE1,
+                        m.SCORE2
+                    FROM MATCHS m
+                    INNER JOIN EQUIPES e1 ON m.id_equipe1 = e1.id
+                    INNER JOIN EQUIPES e2 ON m.id_equipe2 = e2.id
+                    WHERE m.id_equipe1 = ? OR m.id_equipe2 = ?
+                    """, (equipe_id, equipe_id))
+    return cursor.fetchall()
+
+def get_poste_name_by_id(conn, poste_id):
+    cursor = conn.cursor()
+    cursor.execute("SELECT nom_poste FROM POSTES WHERE id = ?", (poste_id,))
+    return cursor.fetchone()[0]
+
+def update_joueur_blessure(conn, joueur_id, blessure_status):
+    cursor = conn.cursor()
+    cursor.execute("UPDATE JOUEURS SET BLESSE = ? WHERE id = ?", (blessure_status, joueur_id))
+    conn.commit()
+
+def update_joueur_blessure_temps(conn):
+    cursor = conn.cursor()
+    cursor.execute("""
+                    UPDATE JOUEURS
+                    SET BLESSE = 0
+                    WHERE BLESSE = 1
+                    """)
+    conn.commit()
+
+def ajout_match(conn, equipe_a_id, equipe_b_id, score_a, score_b):
+    cursor = conn.cursor()
+    cursor.execute("INSERT INTO MATCHS (id_equipe1, id_equipe2, SCORE1, SCORE2) VALUES (?, ?, ?, ?)", (equipe_a_id, equipe_b_id, score_a, score_b))
+    conn.commit()
+    return cursor.lastrowid
 
 def choix_multiple(options, prompt="Please choose an option:"):
     for idx, option in enumerate(options, start=1):

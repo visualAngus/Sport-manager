@@ -101,7 +101,7 @@ def menu_principal(id_manager,nom_manager,prenom_manager):
         elif choix == "Gérer mon équipe":
             gestion_equipe(equipe_id)
         elif choix == "Gérer mes matchs et ma progression":
-            gestion_match_progression()
+            gestion_match_progression(equipe_id)
 
 
 def ajouter_joueur(equipe_id=None):
@@ -136,6 +136,10 @@ def changement_joueur(equipe_id=None):
     if equipe_id == None:
         return 'Aucune équipe sélectionnée pour changer un joueur.'
     liste_joueurs = sql_conn.get_all_joueurs_by_equipe(conn, equipe_id)
+    if not liste_joueurs:
+        console.print("[red]Aucun joueur dans cette équipe pour modifier.[/red]")
+        Prompt.ask(" Appuyez sur Entrée pour revenir au menu gestion équipe.")
+        return
     choix_joueur = affichage_joueurs(liste_joueurs, prompt=" Choisissez le JOUEUR à modifier :")
     joueur_id = liste_joueurs[int(choix_joueur)-1][0]
     modif_joueur(joueur_id=joueur_id)
@@ -167,15 +171,76 @@ def gestion_equipe(equipe_id=None):
     """
     if equipe_id == None:
         return 'Aucune équipe sélectionnée pour ajouter un joueur.'
-    liste_possibilites = ["Ajouter un joueur", "Changer la composition de l'équipe", "Retour au menu principal"]
+    liste_possibilites = ["Ajouter un joueur", "Changer la composition de l'équipe","Afficher mes joueurs", "Retour au menu principal"]
     choix = choix_multiple(liste_possibilites, prompt=" Que voulez-vous faire ?")
     if choix == "Ajouter un joueur":
         ajouter_joueur(equipe_id)
     elif choix == "Changer la composition de l'équipe":
         changement_joueur(equipe_id=equipe_id)
-    
+    elif choix == "Afficher mes joueurs":
+        affichage_joueurs_par_equipe(equipe_id)
+
+def affichage_joueurs_par_equipe(equipe_id=None):
+    """
+    Afficher la liste des joueurs de l'équipe.
+    Retour au menu gestion équipe.
+    """
+    if equipe_id == None:
+        return 'Aucune équipe sélectionnée pour afficher les joueurs.'
+    print("\033c", end="")
+    console.print(Panel.fit(" MES JOUEURS ", title="SPORT MANAGER", border_style="white"))
+    liste_joueurs = sql_conn.get_all_joueurs_by_equipe(conn, equipe_id, True)
+    table = Table(show_header=True, header_style="bold magenta")
+    table.add_column("Nom", style="dim", min_width=10)
+    table.add_column("Poste", min_width=10)
+    table.add_column("Blessé", justify="center")
+    table.add_column("Vitesse", justify="right")
+    table.add_column("Endurance", justify="right")
+    table.add_column("Technique", justify="right")
+
+    for joueur in liste_joueurs:
+        table.add_row(
+            f"[cyan]{joueur[1]}[/cyan]", 
+            joueur[2], 
+            "Oui" if joueur[3] == 0 else "Non", 
+            str(joueur[4]), 
+            str(joueur[5]), 
+            str(joueur[6])
+        )
+
+    console.print(table)
+    Prompt.ask(" Appuyez sur Entrée pour revenir au menu gestion équipe.")
+def mes_matchs(equipe_id):
+    """
+    Afficher les matchs de l'équipe.
+    Retour au menu gestion matchs et progression.
+    """
+
+    print("\033c", end="")
+    console.print(Panel.fit(" MES MATCHS ", title="SPORT MANAGER", border_style="white"))
+    matchs = sql_conn.get_all_matchs_by_equipe(conn, equipe_id)
+    table = Table(show_header=True, header_style="bold magenta")
+    table.add_column("ID", style="dim", width=6)
+    table.add_column("Équipe 1", min_width=20)
+    table.add_column("Équipe 2", min_width=20)
+    table.add_column("Score 1", justify="right")
+    table.add_column("Score 2", justify="right")
+    for match in matchs:
+        if match[3] > match[4]:  # Équipe 1 a gagné
+            table.add_row(str(match[0]), f"[green]{match[1]}[/green]", match[2], str(match[3]), str(match[4]))
+        elif match[3] < match[4]:  # Équipe 2 a gagné
+            table.add_row(str(match[0]), match[1], f"[green]{match[2]}[/green]", str(match[3]), str(match[4]))
+        else:  # Match nul
+            table.add_row(str(match[0]), match[1], match[2], str(match[3]), str(match[4]))
+    console.print(table)
+    Prompt.ask(" Appuyez sur Entrée pour revenir au menu gestion matchs et progression.")
     
 def choix_equipe():
+    """
+    Choisir la composition de l'équipe.
+    Offensive, Défensive, Polyvalente.
+    Retour au menu gestion équipe.
+    """
     choix = Prompt.ask(" Quelle composition voulez-vous jouer ? (Offensive/Défensive/Milieu)", choices=["o", "d", "p"])
     if choix == "o":
         print(" Votre équipe sera offensive")
@@ -186,27 +251,75 @@ def choix_equipe():
 
     choix_equipe()
     
+def match_progression(list_noms_equipes=None):
+    print("\033c", end="")
+    tmp_temps = random.randint(30,250)
+    print(" Le match commence dans ")
+    for i in range(3,0,-1):
+        print(f" {i} ")
+        time.sleep(1)
+        print("\033c", end="")
+    print("\n\n")
+    list_scorre_possible = [1,2,3,0]
+    scorea = 0
+    scoreb = 0
+    for _ in range(tmp_temps):
+        time.sleep(0.01)
+        if random.choice([True, False]):
+            scorea += random.choice(list_scorre_possible)
+        if random.choice([True, False]):
+            scoreb += random.choice(list_scorre_possible)
+        print("\033c", end="")
+        print(f" {list_noms_equipes[0]} : {scorea}")
+        print(f" {list_noms_equipes[1]} : {scoreb}")
+    return scorea, scoreb
 
-
-    
-
-def gestion_match_progression():
+def gestion_match_progression(equipe_id):
     """
-    Afficher menu gestion match équipe.
-    - Séléctionner / composer équipe.
-    Le match se joue.
-    Voir si il y a des blessures, si oui, enregistrer la blessure, si non saisir le score et les performances.
-    Mettre à jour les compétences et décompter les blessures.
+    Afficher menu gestion matchs et progression.
+    Gérer les matchs (lancer un match).
+    Gérer la progression de l'équipe (voir la progression).
     Retour au menu principal.
     """
+
+    
+    
+    liste_possibilites = ["Lancer un match", "Voir la progression de l'équipe", "Retour au menu principal"]
+    choix = choix_multiple(liste_possibilites, prompt=" Que voulez-vous faire ?")    
+    if choix == "Lancer un match":
+        nom_equipe = sql_conn.get_equipes_name_by_id(conn, equipe_id)
+        adversaires = sql_conn.get_all_equipes_except_id(conn, equipe_id)
+        adversaire = random.choice(adversaires)
+        list_noms_equipes = [nom_equipe, adversaire]
+        scorea, scoreb = match_progression(list_noms_equipes)
+        id_equipeb = sql_conn.get_equipe_id_by_name(conn, adversaire)
+        list_joueura = sql_conn.get_all_joueurs_by_equipe(conn, equipe_id)
+        list_joueurb = sql_conn.get_all_joueurs_by_equipe(conn,id_equipeb)
+        list_joueur = list_joueura + list_joueurb
+        for joueur in list_joueur:
+            random_chance = random.randint(1, 100)
+            if random_chance <= 5:  # 5% de chance de blessure
+                joueur_nom = joueur[1]
+                console.print(f"[red]{joueur_nom} s'est blessé pendant le match ![/red]")
+                sql_conn.update_joueur_blessure(conn, joueur[0], 1)
+
+        console.print(f"[bold green]Match terminé ! Score final : {scorea}/{scoreb}[/bold green]")
+        if scorea > scoreb:
+            console.print(f"[green]Félicitations ! Votre équipe {nom_equipe} a gagné contre {adversaire}.[/green]")
+        elif scorea < scoreb:
+            console.print(f"[red]Dommage ! Votre équipe {nom_equipe} a perdu contre {adversaire}.[/red]")
+        else:
+            console.print(f"[yellow]Match nul entre {nom_equipe} et {adversaire}.[/yellow]")
+        sql_conn.ajout_match(conn, equipe_id, id_equipeb, scorea, scoreb)
+        Prompt.ask(" Appuyez sur Entrée pour revenir au menu gestion matchs et progression.")
+    
+    elif choix == "Voir la progression de l'équipe":
+        mes_matchs(equipe_id)
 
 def quitter():
     """
     Le joueur quitte le jeu.
     """
-
-
-
 
 if __name__ == "__main__":
     console = Console()
