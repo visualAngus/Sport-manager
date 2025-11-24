@@ -37,7 +37,11 @@ def get_equipes_by_manageur(conn, manageur_id):
 
 def get_all_joueurs_by_equipe(conn, equipe_id):
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM joueurs WHERE id_equipe = ?", (equipe_id,))
+    cursor.execute("""
+                    SELECT joueurs.id ,CONCAT(NOM, ' ', PRENOM) AS NOM_COMPLET,p.nom_poste 
+                    FROM joueurs 
+                    INNER JOIN POSTES p on p.id = joueurs.id_1 
+                    WHERE id_equipe = ?""", (equipe_id,))
     return cursor.fetchall()
 
 def get_poste_id_by_nom(conn, poste_nom):
@@ -72,3 +76,8 @@ def choix_multiple(options, prompt="Please choose an option:"):
         console.print(f"[cyan]{idx}.[/cyan] {option}")
     choice = Prompt.ask(prompt, choices=[str(i) for i in range(1, len(options) + 1)])
     return options[int(choice) - 1]
+
+def update_joueur_poste(conn, joueur_id, nouveau_poste_id):
+    cursor = conn.cursor()
+    cursor.execute("UPDATE JOUEURS SET id_1 = ? WHERE id = ?", (nouveau_poste_id, joueur_id))
+    conn.commit()

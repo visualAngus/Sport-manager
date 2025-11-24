@@ -24,6 +24,14 @@ def affichage_equipes(liste_equipe, prompt=" Choisissez votre EQUIPE :"):
         console.print(f"[cyan]{idx}.[/cyan] {option[0]} {option[1]}/{option[2]}")
     choice = Prompt.ask(prompt, choices=[str(i) for i in range(1, len(liste_equipe) + 1)])
     return choice
+
+def affichage_joueurs(liste_joueurs, prompt=" Choisissez votre JOUEUR :",r=True):
+    if r:
+        print("\033c", end="")
+    for idx, option in enumerate(liste_joueurs, start=1):
+        console.print(f"[cyan]{idx}.[/cyan] {option[1]} - {option[2]}")
+    choice = Prompt.ask(prompt, choices=[str(i) for i in range(1, len(liste_joueurs) + 1)])
+    return choice
     
 def question_generale(prompt="",question= None):
     if question:
@@ -110,6 +118,38 @@ def ajouter_joueur(equipe_id=None):
         console.print(f"[green]Le joueur {nom} {prenom} a été ajouté avec succès à l'équipe.[/green]")
     Prompt.ask(" Appuyez sur Entrée pour revenir au menu gestion équipe.")
     
+def changement_joueur(equipe_id=None):
+    """
+    Changer la composition de l'équipe.
+    Afficher la liste des joueurs de l'équipe.
+    Demander quel joueur modifier.
+    Appeler la fonction modif_joueur avec l'ID du joueur sélectionné.
+    Retour au menu gestion équipe.
+    """
+    if equipe_id == None:
+        return 'Aucune équipe sélectionnée pour changer un joueur.'
+    liste_joueurs = sql_conn.get_all_joueurs_by_equipe(conn, equipe_id)
+    choix_joueur = affichage_joueurs(liste_joueurs, prompt=" Choisissez le JOUEUR à modifier :")
+    joueur_id = liste_joueurs[int(choix_joueur)-1][0]
+    modif_joueur(joueur_id=joueur_id)
+
+def modif_joueur(joueur_id=None):
+    """
+    Modifier le poste d'un joueur.
+    Demander le nouveau poste.
+    Mettre à jour le poste du joueur dans la base de données.
+    Confirmer la modification.
+    Retour au menu gestion équipe.
+    """
+    if joueur_id == None:
+        return 'Aucun joueur sélectionné pour modification.'
+    liste_postes = sql_conn.get_all_postes(conn)
+    poste = choix_multiple(liste_postes, prompt=" Choisissez le NOUVEAU POSTE du joueur :")
+    poste_id = sql_conn.get_poste_id_by_nom(conn, poste)
+    sql_conn.update_joueur_poste(conn, joueur_id, poste_id)
+    # Mettre à jour le poste du joueur dans la base de données
+    console.print(f"[green]Le poste du joueur a été mis à jour avec succès.[/green]")
+    Prompt.ask(" Appuyez sur Entrée pour revenir au menu gestion équipe.")
 
 def gestion_equipe(equipe_id=None):
     """
@@ -124,16 +164,8 @@ def gestion_equipe(equipe_id=None):
     choix = choix_multiple(liste_possibilites, prompt=" Que voulez-vous faire ?")
     if choix == "Ajouter un joueur":
         ajouter_joueur(equipe_id)
-
-
-
-
-    
-
-def changement_joueur():
-    changement_joueur = Prompt.ask(" Voulez-vous changer un joueur ? (Oui/Non)", choices=["o", "n"])
-    
-        
+    elif choix == "Changer la composition de l'équipe":
+        changement_joueur(equipe_id=equipe_id)
     
     
 def choix_equipe():
