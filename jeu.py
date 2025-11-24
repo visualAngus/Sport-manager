@@ -101,7 +101,7 @@ def ajouter_joueur(equipe_id=None):
     """
     Ajouter un joueur sans équipe.
     Demander le nom, prénom et poste.
-    Créer le joueur dans la base de données.
+    Créer le joueur dans la base de données.  
     Confirmer l'ajout.
     Retour au menu gestion équipe.
     """
@@ -192,7 +192,7 @@ def gestion_match_progression():
     Mettre à jour les compétences et décompter les blessures.
     Retour au menu principal.
     """
-
+    
 
 def quitter():
     """
