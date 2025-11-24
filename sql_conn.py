@@ -131,17 +131,32 @@ def get_poste_name_by_id(conn, poste_id):
     cursor.execute("SELECT nom_poste FROM POSTES WHERE id = ?", (poste_id,))
     return cursor.fetchone()[0]
 
+def get_nb_joueurs_disponibles(conn, equipe_id):
+    cursor = conn.cursor()
+    cursor.execute("""
+                    SELECT COUNT(*) 
+                    FROM JOUEURS 
+                    WHERE id_equipe = ? AND BLESSE = 0
+                    """, (equipe_id,))
+    return cursor.fetchone()[0]
+
 def update_joueur_blessure(conn, joueur_id, blessure_status):
     cursor = conn.cursor()
-    cursor.execute("UPDATE JOUEURS SET BLESSE = ? WHERE id = ?", (blessure_status, joueur_id))
+    cursor.execute("UPDATE JOUEURS SET BLESSE = ?, DUREE_BLESURE = 3 WHERE id = ?", (blessure_status, joueur_id))
     conn.commit()
 
 def update_joueur_blessure_temps(conn):
     cursor = conn.cursor()
     cursor.execute("""
-                    UPDATE JOUEURS
-                    SET BLESSE = 0
-                    WHERE BLESSE = 1
+                    UPDATE JOUEURS 
+                    SET DUREE_BLESURE = DUREE_BLESURE - 1
+                    WHERE DUREE_BLESURE > 0
+                    """)
+    conn.commit()
+    cursor.execute("""
+                    UPDATE JOUEURS 
+                    SET BLESSE = 0, DUREE_BLESURE = 0
+                    WHERE DUREE_BLESURE <= 0 AND BLESSE = 1
                     """)
     conn.commit()
 

@@ -282,11 +282,16 @@ def gestion_match_progression(equipe_id):
     Retour au menu principal.
     """
 
-    
-    
     liste_possibilites = ["Lancer un match", "Voir la progression de l'équipe", "Retour au menu principal"]
-    choix = choix_multiple(liste_possibilites, prompt=" Que voulez-vous faire ?")    
+    choix = choix_multiple(liste_possibilites, prompt=" Que voulez-vous faire ?")
+
     if choix == "Lancer un match":
+        sql_conn.update_joueur_blessure_temps(conn)
+        nb_joueurs_disponibles = sql_conn.get_nb_joueurs_disponibles(conn, equipe_id)
+        if nb_joueurs_disponibles < 5:
+            console.print(f"[red]Vous n'avez pas assez de joueurs disponibles pour lancer un match (5 minimum). Vous en avez {nb_joueurs_disponibles}.[/red]")
+            Prompt.ask(" Appuyez sur Entrée pour revenir au menu gestion matchs et progression.")
+            return
         nom_equipe = sql_conn.get_equipes_name_by_id(conn, equipe_id)
         adversaires = sql_conn.get_all_equipes_except_id(conn, equipe_id)
         adversaire = random.choice(adversaires)
