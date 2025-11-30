@@ -28,9 +28,13 @@ def affichage_equipes(liste_equipe, prompt=" Choisissez votre EQUIPE :"):
 def affichage_joueurs(liste_joueurs, prompt=" Choisissez votre JOUEUR :",r=True):
     if r:
         print("\033c", end="")
+    # récupérer le nom le plus grand de la liste pour l'alignement
+    max_len_nom = max(len(joueur[1]) for joueur in liste_joueurs) +1
     for idx, option in enumerate(liste_joueurs, start=1):
-        console.print(f"[cyan]{idx}.[/cyan] {option[1]} - {option[2]}")
-    choice = Prompt.ask(prompt, choices=[str(i) for i in range(1, len(liste_joueurs) + 1)])
+        console.print(f"[cyan]{idx}.[/cyan] {option[1]:<{max_len_nom}} - {option[2]}")
+    # rajouter quitter
+    console.print(f"[cyan]{len(liste_joueurs)+1}.[/cyan] Quitter")
+    choice = Prompt.ask(prompt, choices=[str(i) for i in range(1, len(liste_joueurs) + 2)])
     return choice
     
 def question_generale(prompt="",question= None):
@@ -92,12 +96,12 @@ def menu_principal(id_manager,nom_manager,prenom_manager):
         print("\033c", end="")
         console.print(Panel(Text(" MENU PRINCIPAL ", justify="center"), title="SPORT MANAGER", border_style="white", expand=True))
         # affichage du nom du manager et de l'équipe
-        console.print(f"[bold green]Manager:[/bold green] {nom_manager} {prenom_manager} | [bold blue]Équipe:[/bold blue] {nom_equipe}\n")
+        puissance = sql_conn.get_equipe_puissance(conn, equipe_id)
+        console.print(f"[bold green]Manager:[/bold green] {nom_manager} {prenom_manager} | [bold blue]Équipe:[/bold blue] {nom_equipe} | [bold magenta]Puissance:[/bold magenta] {puissance}\n")
         liste_possibilites = ["Gérer mon équipe", "Gérer mes matchs et ma progression", "Quitter le jeu"]
         choix = choix_multiple(liste_possibilites, prompt=" Que voulez-vous faire ?",r = False)
         if choix == "Quitter le jeu":
             quitter()
-            break
         elif choix == "Gérer mon équipe":
             gestion_equipe(equipe_id)
         elif choix == "Gérer mes matchs et ma progression":
@@ -141,6 +145,8 @@ def changement_joueur(equipe_id=None):
         Prompt.ask(" Appuyez sur Entrée pour revenir au menu gestion équipe.")
         return
     choix_joueur = affichage_joueurs(liste_joueurs, prompt=" Choisissez le JOUEUR à modifier :")
+    if choix_joueur == str(len(liste_joueurs) + 1):
+        return
     joueur_id = liste_joueurs[int(choix_joueur)-1][0]
     modif_joueur(joueur_id=joueur_id)
 
@@ -162,6 +168,51 @@ def modif_joueur(joueur_id=None):
     console.print(f"[green]Le poste du joueur a été mis à jour avec succès.[/green]")
     Prompt.ask(" Appuyez sur Entrée pour revenir au menu gestion équipe.")
 
+def entrainement(equipe_id=None):
+    """
+    Entraîner les joueurs de l'équipe.
+    Augmenter les statistiques des joueurs.
+    Confirmer l'entraînement.
+    Retour au menu gestion équipe.
+    """
+    if equipe_id == None:
+        return 'Aucune équipe sélectionnée pour l\'entraînement.'
+    sql_conn.level_up_joueur(conn, equipe_id, entrainement=True)
+
+    list_joueur = sql_conn.get_all_joueurs_by_equipe(conn, equipe_id)
+
+    nb_blesses = 0
+
+    console.print(Panel.fit(" ENTRAÎNEMENT DE L'ÉQUIPE ", title="SPORT MANAGER", border_style="white"))
+    time.sleep(1)
+    console.print(f"[bold blue]Entraînement de l'équipe en cours...[/bold blue]\n")
+    time.sleep(0.5)
+    # afficher les joueurs se préparent 
+    console.print(" Les joueurs se préparent à l'entraînement...")
+    time.sleep(1)
+    console.print(" L'entraînement commence...")
+    time.sleep(1)
+    console.print(" Les joueurs s'entraînent dur...")
+    time.sleep(0.5)
+    console.print(" L'entraînement touche à sa fin...")
+    time.sleep(0.2)
+    console.print("\n[bold green]Entraînement terminé ![/bold green]")
+    for joueur in list_joueur:
+        random_chance = random.randint(1, 100)
+        if random_chance <= 3:  # 3% de chance de blessure
+            joueur_nom = joueur[1]
+            console.print(f"[red]{joueur_nom} s'est blessé pendant l'entraînement ![/red]")
+            sql_conn.update_joueur_blessure(conn, joueur[0], 1)
+            nb_blesses += 1
+    
+    if nb_blesses > 0:
+        console.print(f"[yellow]Nombre de joueurs blessés pendant l'entraînement : {nb_blesses}[/yellow]")
+    else:
+        console.print(f"[green]L'entraînement de l'équipe a été effectué avec succès.[/green]")
+    sql_conn.update_joueur_blessure_temps(conn, equipe_id)
+    Prompt.ask(" Appuyez sur Entrée pour revenir au menu gestion équipe.")
+
+
 def gestion_equipe(equipe_id=None):
     """
     Afficher menu gestion équipe.
@@ -171,10 +222,12 @@ def gestion_equipe(equipe_id=None):
     """
     if equipe_id == None:
         return 'Aucune équipe sélectionnée pour ajouter un joueur.'
-    liste_possibilites = ["Ajouter un joueur", "Changer la composition de l'équipe","Afficher mes joueurs", "Retour au menu principal"]
+    liste_possibilites = ["Ajouter un joueur","Entrainement", "Changer la composition de l'équipe","Afficher mes joueurs", "Retour au menu principal"]
     choix = choix_multiple(liste_possibilites, prompt=" Que voulez-vous faire ?")
     if choix == "Ajouter un joueur":
         ajouter_joueur(equipe_id)
+    elif choix == "Entrainement":
+        entrainement(equipe_id)
     elif choix == "Changer la composition de l'équipe":
         changement_joueur(equipe_id=equipe_id)
     elif choix == "Afficher mes joueurs":
@@ -251,27 +304,36 @@ def choix_equipe():
 
     choix_equipe()
     
-def match_progression(list_noms_equipes=None):
+def match_progression(conn,list_noms_equipes=None):
     print("\033c", end="")
     tmp_temps = random.randint(30,250)
-    print(" Le match commence dans ")
-    for i in range(3,0,-1):
-        print(f" {i} ")
-        time.sleep(1)
-        print("\033c", end="")
-    print("\n\n")
-    list_scorre_possible = [1,2,3,0]
+    puissance_equipea = sql_conn.get_equipe_puissance(conn, sql_conn.get_equipe_id_by_name(conn, list_noms_equipes[0]))
+    puissance_equipeb = sql_conn.get_equipe_puissance(conn, sql_conn.get_equipe_id_by_name(conn, list_noms_equipes[1]))
+    console.print(f"[bold blue]{list_noms_equipes[0]} (Vous)[/bold blue] Puissance de l'équipe : {puissance_equipea}")
+    console.print(f"[bold blue]{list_noms_equipes[1]}[/bold blue] Puissance de l'équipe : {puissance_equipeb}\n")
+    console.print("[white]Les joueurs entrent sur le terrain...[/white]")
+    time.sleep(1)
+    console.print("[bold white]Le coup d'envoi est donné...[/bold white]")
+    time.sleep(1)
+    console.print("\n[bold green]Les deux équipes s'affrontent avec intensité ![/bold green]\n")
+    time.sleep(0.8)
+    console.print(" \n[bold yellow]Le match touche à sa fin...[/bold yellow]\n")
+    time.sleep(1)
+
+    list_scorre_possible = [1, 2, 3, 0]
     scorea = 0
     scoreb = 0
+
+    # Calculer les probabilités basées sur les puissances
+    total_puissance = puissance_equipea + puissance_equipeb
+    proba_equipea = puissance_equipea / total_puissance
+    proba_equipeb = puissance_equipeb / total_puissance
+
     for _ in range(tmp_temps):
-        time.sleep(0.01)
-        if random.choice([True, False]):
+        if random.random() < proba_equipea:  # Équipe A a plus de chances de marquer
             scorea += random.choice(list_scorre_possible)
-        if random.choice([True, False]):
+        if random.random() < proba_equipeb:  # Équipe B a plus de chances de marquer
             scoreb += random.choice(list_scorre_possible)
-        print("\033c", end="")
-        print(f" {list_noms_equipes[0]} : {scorea}")
-        print(f" {list_noms_equipes[1]} : {scoreb}")
     return scorea, scoreb
 
 def gestion_match_progression(equipe_id):
@@ -286,7 +348,7 @@ def gestion_match_progression(equipe_id):
     choix = choix_multiple(liste_possibilites, prompt=" Que voulez-vous faire ?")
 
     if choix == "Lancer un match":
-        sql_conn.update_joueur_blessure_temps(conn)
+        sql_conn.update_joueur_blessure_temps(conn, equipe_id)
         nb_joueurs_disponibles = sql_conn.get_nb_joueurs_disponibles(conn, equipe_id)
         if nb_joueurs_disponibles < 5:
             console.print(f"[red]Vous n'avez pas assez de joueurs disponibles pour lancer un match (5 minimum). Vous en avez {nb_joueurs_disponibles}.[/red]")
@@ -296,19 +358,23 @@ def gestion_match_progression(equipe_id):
         adversaires = sql_conn.get_all_equipes_except_id(conn, equipe_id)
         adversaire = random.choice(adversaires)
         list_noms_equipes = [nom_equipe, adversaire]
-        scorea, scoreb = match_progression(list_noms_equipes)
+        scorea, scoreb = match_progression(conn, list_noms_equipes)
         id_equipeb = sql_conn.get_equipe_id_by_name(conn, adversaire)
         list_joueura = sql_conn.get_all_joueurs_by_equipe(conn, equipe_id)
         list_joueurb = sql_conn.get_all_joueurs_by_equipe(conn,id_equipeb)
         list_joueur = list_joueura + list_joueurb
+
         for joueur in list_joueur:
             random_chance = random.randint(1, 100)
             if random_chance <= 5:  # 5% de chance de blessure
                 joueur_nom = joueur[1]
-                console.print(f"[red]{joueur_nom} s'est blessé pendant le match ![/red]")
+                if joueur in list_joueura:
+                    console.print(f"[red]{joueur_nom} de votre équipe s'est blessé pendant le match ![/red]")
+                else:
+                    console.print(f"[yellow]{joueur_nom} de l'équipe adverse s'est blessé pendant le match ![/yellow]")
                 sql_conn.update_joueur_blessure(conn, joueur[0], 1)
 
-        console.print(f"[bold green]Match terminé ! Score final : {scorea}/{scoreb}[/bold green]")
+        console.print(f"\n[bold green]Match terminé ! Score final : {scorea}/{scoreb}[/bold green]")
         if scorea > scoreb:
             console.print(f"[green]Félicitations ! Votre équipe {nom_equipe} a gagné contre {adversaire}.[/green]")
         elif scorea < scoreb:
@@ -325,6 +391,11 @@ def quitter():
     """
     Le joueur quitte le jeu.
     """
+    print("\033c", end="")
+    console.print(Panel(Text(" Merci d'avoir joué à SPORT MANAGER ! ", justify="center"), title="SPORT MANAGER", border_style="white", expand=True))
+    time.sleep(1)
+    conn.close()
+    exit()
 
 if __name__ == "__main__":
     console = Console()

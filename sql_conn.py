@@ -140,30 +140,72 @@ def get_nb_joueurs_disponibles(conn, equipe_id):
                     """, (equipe_id,))
     return cursor.fetchone()[0]
 
+def get_equipe_puissance(conn, equipe_id):
+    cursor = conn.cursor()
+    cursor.execute("""
+                    SELECT CAST(SUM(j.vitesse + j.endurence + j.force + j.technique) AS INTEGER) AS puissance_totale
+                    FROM JOUEURS j
+                    WHERE j.id_equipe = ? AND j.BLESSE = 0
+                    """, (equipe_id,))
+    result = cursor.fetchone()
+    return result[0] if result[0] is not None else 0
+
 def update_joueur_blessure(conn, joueur_id, blessure_status):
     cursor = conn.cursor()
     cursor.execute("UPDATE JOUEURS SET BLESSE = ?, DUREE_BLESURE = 3 WHERE id = ?", (blessure_status, joueur_id))
     conn.commit()
 
-def update_joueur_blessure_temps(conn):
+def update_joueur_blessure_temps(conn,equipe_id):
     cursor = conn.cursor()
     cursor.execute("""
                     UPDATE JOUEURS 
                     SET DUREE_BLESURE = DUREE_BLESURE - 1
-                    WHERE DUREE_BLESURE > 0
-                    """)
+                    WHERE DUREE_BLESURE > 0 AND id_equipe = ?
+                    """, (equipe_id,)
+                    )
     conn.commit()
     cursor.execute("""
                     UPDATE JOUEURS 
                     SET BLESSE = 0, DUREE_BLESURE = 0
-                    WHERE DUREE_BLESURE <= 0 AND BLESSE = 1
-                    """)
+                    WHERE DUREE_BLESURE <= 0 AND BLESSE = 1 AND id_equipe = ?
+                    """, (equipe_id,)
+                    )
     conn.commit()
+
+def level_up_joueur(conn, equipe_id,entrainement=False):
+    cursor = conn.cursor()
+    cursor.execute("SELECT id, vitesse, endurence, force, technique FROM JOUEURS WHERE id_equipe = ?", (equipe_id,))
+    joueurs = cursor.fetchall()
+    
+    for joueur in joueurs:
+        if entrainement:
+            # Les joueurs de l'équipe adverse ont une progression réduite
+            facteur_progression = 0.5
+        else:
+            facteur_progression = 2
+        joueur_id, vitesse, endurence, force, technique = joueur
+        new_vitesse = vitesse + random.randint(0, 3) * facteur_progression
+        new_endurence = endurence + random.randint(0, 3) * facteur_progression
+        new_force = force + random.randint(0, 3) * facteur_progression
+        new_technique = technique + random.randint(0, 3) * facteur_progression
+        
+        cursor.execute("""
+                        UPDATE JOUEURS 
+                        SET vitesse = ?, 
+                            endurence = ?, 
+                            force = ?, 
+                            technique = ?
+                        WHERE id = ?
+                        """, (new_vitesse, new_endurence, new_force, new_technique, joueur_id))
+    conn.commit()
+
 
 def ajout_match(conn, equipe_a_id, equipe_b_id, score_a, score_b):
     cursor = conn.cursor()
     cursor.execute("INSERT INTO MATCHS (id_equipe1, id_equipe2, SCORE1, SCORE2) VALUES (?, ?, ?, ?)", (equipe_a_id, equipe_b_id, score_a, score_b))
     conn.commit()
+    level_up_joueur(conn, equipe_a_id)
+    level_up_joueur(conn, equipe_b_id)
     return cursor.lastrowid
 
 def choix_multiple(options, prompt="Please choose an option:"):
