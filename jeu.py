@@ -288,22 +288,6 @@ def mes_matchs(equipe_id):
     console.print(table)
     Prompt.ask(" Appuyez sur Entrée pour revenir au menu gestion matchs et progression.")
     
-def choix_equipe():
-    """
-    Choisir la composition de l'équipe.
-    Offensive, Défensive, Polyvalente.
-    Retour au menu gestion équipe.
-    """
-    choix = Prompt.ask(" Quelle composition voulez-vous jouer ? (Offensive/Défensive/Milieu)", choices=["o", "d", "p"])
-    if choix == "o":
-        print(" Votre équipe sera offensive")
-    elif choix == "d":
-        print(" Votre équipe sera défensive")
-    else:
-        print(" Votre équipe sera polyvalente")
-
-    choix_equipe()
-    
 def match_progression(conn,list_noms_equipes=None):
     print("\033c", end="")
     tmp_temps = random.randint(30,250)
