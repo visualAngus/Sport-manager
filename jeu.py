@@ -127,7 +127,7 @@ def ajouter_joueur(equipe_id=None):
         console.print("[red]Erreur : Le joueur n'a pas pu être créé car aucune équipe n'a été fournie.[/red]")
     else:
         console.print(f"[green]Le joueur {nom} {prenom} a été ajouté avec succès à l'équipe.[/green]")
-    Pro**mpt.ask(" Appuyez sur Entrée pour revenir au menu gestion équipe.")
+    Prompt.ask(" Appuyez sur Entrée pour revenir au menu gestion équipe.")
     
 def changement_joueur(equipe_id=None):
     """
