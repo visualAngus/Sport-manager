@@ -177,8 +177,10 @@ monStockage.setItem("Managers", JSON.stringify(managersJSON.liste));
 monStockage.setItem("Équipes", JSON.stringify(equipesJSON.liste));
 monStockage.setItem("Joueurs", JSON.stringify(joueursJSON.liste));
 
-
-
 const manager = JSON.parse(monStockage.getItem("Managers"));
 const equipes = JSON.parse(monStockage.getItem("Équipes"));
 const joueurs = JSON.parse(monStockage.getItem("Joueurs"));
+
+console.log("✓ Managers chargés:", manager);
+console.log("✓ Équipes chargées:", equipes);
+console.log("✓ Joueurs chargés:", joueurs);
