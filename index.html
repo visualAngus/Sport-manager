@@ -18,21 +18,51 @@
         </div>
     </header>
     <nav class="menu">  
-        <ul class="menu-list">
-            <li><a href="/index.html">Touquet-26</a></li>
-            <li><a href="ma-team.html">Ma team</a></li>
-            <li><a href="mes-matchs.html">Mes matchs</a></li>
-            <li><a href="mes-stats.html">Mes stats</a></li>
-        </ul>
+        <div class="menu-list">
+            <button onclick="load(1)">Touquet-26</button>
+            <button onclick="load(2)">Ma team</button>
+            <button onclick="load(3)">Mes matchs</button>
+            <button onclick="load(4)">Mes stats</button>
+        </div>
     </nav>
     <div class="text-center">
-        <h2><a class="red-text">Touquet</a>-26</h2>
-        <p>Construit ta team de rêve et affronte d'autres joueurs dans des matchs palpitants ! </p>
+        <h2 id="titre_menu"><a class="red-text">Touquet</a>-26</h2>
+        <p id="phrase">Gérer votre équipe, planifier des matchs et suivre vos statistiques tout en profitant de l'ambiance unique du Touquet-26 ! </p>
     </div>
     <div class="image-container">
         <img src="img/basketball.webp" alt="Image du Touquet 26">
     </div>
 </body>
 <script src="index.js"></script>
+<script>
+    const titre_menu = document.getElementById('titre_menu');
+    const phrase = document.getElementById('phrase');
+    const image = document.querySelector('.image-container img');
+    function load(page) {
+        switch(page) {
+            case 1:
+                titre_menu.innerHTML = '<a class="red-text">Touquet</a>-26';
+                image.src = "img/basketball.webp";
+                phrase.innerHTML = "Gérer votre équipe, planifier des matchs et suivre vos statistiques tout en profitant de l'ambiance unique du Touquet-26 !";
+                break;
+            case 2:
+                titre_menu.innerHTML = 'Ma <a class="red-text">team</a>';
+                image.src = "img/equipe.png";
+                phrase.innerHTML = "Construisez et gérez votre équipe de rêve avec des joueurs talentueux et une stratégie gagnante.";
+                break;
+            case 3:
+                titre_menu.innerHTML = 'Mes <a class="red-text">matchs</a>';
+                phrase.innerHTML = "Planifiez et suivez vos matchs pour rester organisé et prêt à affronter vos adversaires.";
+                break;
+            case 4:
+                titre_menu.innerHTML = 'Mes <a class="red-text">stats</a>';
+                phrase.innerHTML = "Analysez vos performances avec des statistiques détaillées pour améliorer votre jeu.";
+                break;
+            default:
+                titre_menu.innerHTML = '<a class="red-text">Touquet</a>-26';
+                phrase.innerHTML = "Gérer votre équipe, planifier des matchs et suivre vos statistiques tout en profitant de l'ambiance unique du Touquet-26 !";
+        }
+    }
+</script>
 
 </html>

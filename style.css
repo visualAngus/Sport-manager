@@ -46,14 +46,20 @@ header{
     justify-content: flex-start;
     gap: 20px;
 }
-.menu-list li a{
+.menu-list button{
     text-decoration: none;
     color: white;
     font-size: 30px;
     padding: 10px 15px;
     transition: background-color 0.3s, color 0.3s;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    font-family: "Bebas Neue", sans-serif;
+    border-radius: 5px;
+
 }
-.menu-list li a:hover{
+.menu-list button:hover{
     background-color: white;
     border-radius: 5px;
     color: black;
@@ -75,9 +81,8 @@ header{
 
 .text-center{
     position: absolute;
-    top: 50%;
-    left: 20%;
-    transform: translate(-25%, -80%);
+    top: 370px;
+    left: 80px;
     color: white;
     font-size: 50px;
     font-family: "Bebas Neue", sans-serif;
@@ -92,6 +97,7 @@ header{
     margin-top: 20px;
     color: #f0f0f0;
     font-weight: 800;
+    max-width: 900px;
 }
 .red-text{
     color: #f96c08;
