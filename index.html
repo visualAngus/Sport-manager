@@ -30,38 +30,60 @@
         <p id="phrase">Gérer votre équipe, planifier des matchs et suivre vos statistiques tout en profitant de l'ambiance unique du Touquet-26 ! </p>
     </div>
     <div class="image-container">
-        <img src="img/basketball.webp" alt="Image du Touquet 26">
+        <img id="image-current" src="img/basketball.webp" alt="Image du Touquet 26">
+        <img id="image-next" src="img/basketball.webp" alt="Image du Touquet 26">
     </div>
 </body>
 <script src="index.js"></script>
 <script>
     const titre_menu = document.getElementById('titre_menu');
     const phrase = document.getElementById('phrase');
-    const image = document.querySelector('.image-container img');
+    const imageCurrent = document.getElementById('image-current');
+    const imageNext = document.getElementById('image-next');
+    
     function load(page) {
+        let newSrc = imageCurrent.src;
+        
         switch(page) {
             case 1:
                 titre_menu.innerHTML = '<a class="red-text">Touquet</a>-26';
-                image.src = "img/basketball.webp";
+                newSrc = "img/basketball.webp";
                 phrase.innerHTML = "Gérer votre équipe, planifier des matchs et suivre vos statistiques tout en profitant de l'ambiance unique du Touquet-26 !";
                 break;
             case 2:
                 titre_menu.innerHTML = 'Ma <a class="red-text">team</a>';
-                image.src = "img/equipe.png";
+                newSrc = "img/equipe.png";
                 phrase.innerHTML = "Construisez et gérez votre équipe de rêve avec des joueurs talentueux et une stratégie gagnante.";
                 break;
             case 3:
                 titre_menu.innerHTML = 'Mes <a class="red-text">matchs</a>';
+                newSrc = "img/score.png";
                 phrase.innerHTML = "Planifiez et suivez vos matchs pour rester organisé et prêt à affronter vos adversaires.";
                 break;
             case 4:
                 titre_menu.innerHTML = 'Mes <a class="red-text">stats</a>';
+                newSrc = "img/trophes.png";
                 phrase.innerHTML = "Analysez vos performances avec des statistiques détaillées pour améliorer votre jeu.";
                 break;
-            default:
-                titre_menu.innerHTML = '<a class="red-text">Touquet</a>-26';
-                phrase.innerHTML = "Gérer votre équipe, planifier des matchs et suivre vos statistiques tout en profitant de l'ambiance unique du Touquet-26 !";
         }
+        
+        // Préparer la nouvelle image
+        imageNext.src = newSrc;
+        imageNext.style.opacity = '0';
+        
+        // Faire disparaître l'ancienne et apparaître la nouvelle
+        setTimeout(() => {
+            imageNext.style.opacity = '1';
+            imageCurrent.style.opacity = '0';
+        }, 10);
+        
+        // Swapper les images après la transition
+        setTimeout(() => {
+            imageCurrent.style.transition = 'none';
+            imageCurrent.src = newSrc;
+            imageCurrent.style.opacity = '1';
+            imageNext.style.opacity = '0';
+        }, 550);
     }
 </script>
 

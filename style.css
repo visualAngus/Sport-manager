@@ -3,6 +3,9 @@
     padding: 0;
     box-sizing: border-box;
 }
+body{
+    background-color: black;
+}
 header{
     width: 100%;
     height: fit-content;
@@ -77,17 +80,31 @@ header{
 .image-container img{
     width: 100%;
     height: auto;
+    transition: opacity 0.5s ease-in-out;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+#image-current{
+    opacity: 1;
+    z-index: 1;
+}
+
+#image-next{
+    opacity: 0;
+    z-index: 2;
 }
 
 .text-center{
     position: absolute;
-    top: 370px;
+    top: 420px;
     left: 80px;
     color: white;
     font-size: 50px;
     font-family: "Bebas Neue", sans-serif;
     text-align: left;
-    
+    transition: opacity 0.5s ease-in-out;
 }
 .text-center h2{
     font-size: 90px;
