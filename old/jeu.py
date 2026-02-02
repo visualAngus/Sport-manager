@@ -125,7 +125,7 @@ def ajouter_joueur(equipe_id=None):
     new_player_id = sql_conn.create_player(conn,nom,prenom,poste,equipe_id)
     if new_player_id is None:
         console.print("[red]Erreur : Le joueur n'a pas pu être créé car aucune équipe n'a été fournie.[/red]")
-    else:
+    else:   
         console.print(f"[green]Le joueur {nom} {prenom} a été ajouté avec succès à l'équipe.[/green]")
     Prompt.ask(" Appuyez sur Entrée pour revenir au menu gestion équipe.")
     
