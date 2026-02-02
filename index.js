@@ -1,19 +1,5 @@
 const monStockage = localStorage;
 
-monStockage.setItem(
-  "Managers",
-  JSON.stringify([{ id: "ID", nom: "Nom", prenom: "Prénom", stats: {} }]),
-);
-monStockage.setItem(
-  "Équipes",
-  JSON.stringify([{ nom: "Nom", manager: "Manager", stats: {} }]),
-);
-monStockage.setItem("Joueurs", JSON.stringify([{ liste: "Liste de joueurs" }]));
-
-const manager = JSON.parse(monStockage.getItem("Manager"));
-const equipes = JSON.parse(monStockage.getItem("Équipes"));
-const joueurs = JSON.parse(monStockage.getItem("Joueurs"));
-
 const managersJSON = {
   liste: [
     {
@@ -186,3 +172,13 @@ const joueursJSON = {
     },
   ],
 };
+
+monStockage.setItem("Managers", JSON.stringify(managersJSON.liste));
+monStockage.setItem("Équipes", JSON.stringify(equipesJSON.liste));
+monStockage.setItem("Joueurs", JSON.stringify(joueursJSON.liste));
+
+
+
+const manager = JSON.parse(monStockage.getItem("Managers"));
+const equipes = JSON.parse(monStockage.getItem("Équipes"));
+const joueurs = JSON.parse(monStockage.getItem("Joueurs"));
