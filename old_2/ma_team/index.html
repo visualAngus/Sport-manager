@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>N-billet Touquet 26</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <header>
+        <div class="logo">
+            <h1><a class="red-text">N</a>-billet <a class="red-text">Touquet</a>-26</h1>
+        </div>
+        <div class="menu-profil">
+            
+            <h2 id="nom_manager"></h2>
+            <div class="menu-profil__rond">
+                <div class="menu-profil__tete"></div>
+                <div class="menu-profil__corps"></div>
+            </div>
+        </div>
+    </header>
+    <nav class="menu">  
+        <div class="menu-list">
+            <button onclick="load(1)">Touquet-26</button>
+            <button onclick="load(2)">Ma team</button>
+            <button onclick="load(3)">Mes matchs</button>
+            <button onclick="load(4)">Mes stats</button>
+        </div>
+    </nav>
+    <div class="button-right">
+        <button onclick="gerer_equipe()">Recruter un joueur</button>
+    </div>
+    <div class="menu_affichage">
+        <div class="menu_affichage__header">
+            <h2>Vos joueurs</h2>
+        </div>
+        <div class="menu_affichage_joueurs" id ="menu_affichage_joueurs">
+            <div class="header_menu">
+                <span class="header_menu__nom">Nom</span>
+                <span class="header_menu__poste">Poste</span>
+                <span class="header_menu__principal">Joueur principal</span>
+            </div>
+        </div>
+    </div>
+    <div class="image-container">
+        <img id="image-current" src="../img/equipe.png" alt="Image du Touquet 26">
+    </div>
+</body>
+<script src="index.js"></script>
+ 
+</html>
