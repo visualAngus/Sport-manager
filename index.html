@@ -1,0 +1,18 @@
+<!doctype html>
+<html>
+    <head>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
+    </head>
+    <body>
+        <div id="boutons-navigation">
+            <button id="page-accueil" onclick="changer_page(event)">Page d'accueil</button>
+            <button id="page-equipe" onclick="changer_page(event)">Page d'Équipe</button>
+            <button id="page-match" onclick="changer_page(event)">Page Matchs</button>
+            <button id="page-stats" onclick="changer_page(event)">Page Statistiques</button>
+        </div>
+        <h1 id="titre-page"></h1>
+        <p id="description-page"></p>
+    </body>
+    <script type="module" src="script/ui.js"></script>
+</html>
+
