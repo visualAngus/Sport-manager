@@ -5,16 +5,16 @@ function changer_page(event) {
     const pageId = event.target.id;
     switch (pageId) {
         case 'page-accueil':
-            currentMenu.changerPage(pageACCUEIL);
+            currentMenu.changerPage(new pageACCUEIL());
             break;
         case 'page-equipe':
-            currentMenu.changerPage(pageEQUIPE);
+            currentMenu.changerPage(new pageEQUIPE());
             break;
         case 'page-match':
-            currentMenu.changerPage(pageMATCH);
+            currentMenu.changerPage(new pageMATCH());
             break;
         case 'page-stats':
-            currentMenu.changerPage(pageSTATS);
+            currentMenu.changerPage(new pageSTATS());
             break;
         default:
             console.error('Page non reconnue :', pageId);
