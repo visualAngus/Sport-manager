@@ -1,18 +1,50 @@
-<!doctype html>
-<html>
-    <head>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
-    </head>
-    <body>
-        <div id="boutons-navigation">
-            <button id="page-accueil" onclick="changer_page(event)">Page d'accueil</button>
-            <button id="page-equipe" onclick="changer_page(event)">Page d'Équipe</button>
-            <button id="page-match" onclick="changer_page(event)">Page Matchs</button>
-            <button id="page-stats" onclick="changer_page(event)">Page Statistiques</button>
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>N-billet Touquet 26</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <header>
+        <div class="logo">
+            <h1><a class="red-text">N</a>-billet <a class="red-text">Touquet</a>-26</h1>
         </div>
-        <h1 id="titre-page"></h1>
-        <p id="description-page"></p>
-    </body>
-    <script type="module" src="script/ui.js"></script>
+        <div class="menu-profile">
+            
+            <h2 id="nom_manager">Coucou Commetn vas tu?</h2>
+            <div class="menu-profil__rond">
+                <div class="menu-profil__tete"></div>
+                <div class="menu-profil__corps"></div>
+            </div>
+        </div>
+    </header>
+    <nav class="menu">  
+        <button onclick="changer_page('page-accueil')">Touquet-26</button>
+        <button onclick="changer_page('ma-team')">Ma team</button>
+        <button onclick="changer_page('mes-matchs')">Mes matchs</button>
+        <button onclick="changer_page('mes-stats')">Mes stats</button>
+    </nav>
+    <div class="text-center">
+        <h2 id="titre_menu"><a class="red-text">Touquet</a>-26</h2>
+        <p id="phrase">Gérer votre équipe, planifier des matchs et suivre vos statistiques tout en profitant de l'ambiance unique du Touquet-26 ! </p>
+    </div>
+    <div class="button-right">
+        <button onclick="gerer_joueur()" class="Ma-team-btn">Gérer mes joueurs</button>
+        <button onclick="gerer_equipe()" class="Ma-team-btn">Gérer mon équipe</button>
+        <button onclick="entrainer()" class="Ma-team-btn">Lancer un entraînement</button>
+    </div>
+    <div class="image-container">
+        <img id="image-current" src="img/basketball.webp" alt="Image du Touquet 26">
+    </div>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
+<script type="module" src="script/ui.js"></script>
 </html>
 
