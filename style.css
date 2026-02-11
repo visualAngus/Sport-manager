@@ -113,3 +113,24 @@ nav button:hover{
     background-color: var(--color-white);
     color: var(--color-black);
 }
+
+#titre_menu {
+    margin-left: 20px;
+}
+
+#phrase {
+    margin-left: 20px;
+}
+
+.team {
+    margin-left: 20px;
+}
+
+.matchs {
+    margin-left: 20px;
+}
+
+.stats {
+    margin-left: 20px;
+}
+
