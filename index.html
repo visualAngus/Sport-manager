@@ -17,7 +17,7 @@
             <h1><a class="red-text">N</a>-billet <a class="red-text">Touquet</a>-26</h1>
         </div>
         <div class="menu-profile">
-            
+
             <h2 id="nom_manager">Coucou Commetn vas tu?</h2>
             <div class="menu-profil__rond">
                 <div class="menu-profil__tete"></div>
@@ -25,7 +25,7 @@
             </div>
         </div>
     </header>
-    <nav class="menu">  
+    <nav class="menu">
         <button onclick="changer_page('page-accueil')">Touquet-26</button>
         <button onclick="changer_page('ma-team')">Ma team</button>
         <button onclick="changer_page('mes-matchs')">Mes matchs</button>
@@ -33,18 +33,32 @@
     </nav>
     <div class="text-center">
         <h2 id="titre_menu"><a class="red-text">Touquet</a>-26</h2>
-        <p id="phrase">Gérer votre équipe, planifier des matchs et suivre vos statistiques tout en profitant de l'ambiance unique du Touquet-26 ! </p>
+        <p id="phrase">Gérer votre équipe, planifier des matchs et suivre vos statistiques tout en profitant de
+            l'ambiance unique du Touquet-26 ! </p>
     </div>
-    <div class="button-right">
+    <div class="button-right" id="action-team">
         <button onclick="gerer_joueur()" class="Ma-team-btn">Gérer mes joueurs</button>
         <button onclick="gerer_equipe()" class="Ma-team-btn">Gérer mon équipe</button>
         <button onclick="entrainer()" class="Ma-team-btn">Lancer un entraînement</button>
     </div>
+    <div class="matchs" id="action-match">
+        <button onclick="lancer_match()" class="Mes-matchs-btn">Lancer un match</button>
+        <button onclick="lancer_tournoi()" class="Mes-matchs-btn">Lancer un tournoi</button>
+        <button onclick="historique()" class="Mes-matchs-btn">Regarder l'historique des matchs</button>
+    </div>
+    <div class="stats" id="action-stats">
+        <button onclick="voir_stats_joueur()" class="Mes-stats-btn">Voir les stats de mes joueurs</button>
+        <button onclick="voir_stats_equipe()" class="Mes-stats-btn">Voir les stats de mon équipe</button>
+        <button onclick="voir_stats_match()" class="Mes-stats-btn">Voir les stats de mes matchs</button>
+        <button onclick="voir_stats_tournoi()" class="Mes-stats-btn">Voir les stats de mes tournois</button>
+        <button onclick="voir_stats_globales()" class="Mes-stats-btn">Voir les stats globales</button>
+    </div>
+
     <div class="image-container">
         <img id="image-current" src="img/basketball.webp" alt="Image du Touquet 26">
     </div>
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
 <script type="module" src="script/ui.js"></script>
-</html>
 
+</html>
