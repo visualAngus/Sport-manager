@@ -93,6 +93,34 @@ class MATCH {
     }
 }
 
+class pageSTATS_MATCH {
+    constructor(liste_matchs_recents, nomMonEquipe) {
+        this.liste_matchs_recents = liste_matchs_recents
+        this.nomPage = "Détails des Matchs";
+        this.titre = "Historique des Matchs"
+        this.derniers_matchs = liste_matchs_recents.slice(-10)
+        this.description = this.calculerBilan(nomMonEquipe)
+        this.url_image = "img/score.png";
+        this.list_btn = [{ id: "retour", text: "Retour" }];
+    }
+    calculerBilan(nomMonEquipe) {
+        let nombreVictoires = 0;
+        let nombreDefaites = 0;
+
+        this.derniers_matchs.forEach(match => {
+            
+            if ( match.Winner === nomMonEquipe ) {
+                nombreVictoires = nombreVictoires + 1; // C'est une victoire
+            } else {
+                nombreDefaites = nombreDefaites + 1;   // C'est une défaite
+            }
+
+        });
+
+        return "Bilan : " + nombreVictoires + "V - " + nombreDefaites + "D";
+    }
+}
+
 class pageACCUEIL {
     constructor() {
         this.nomPage = "Page d'Accueil";
@@ -143,7 +171,8 @@ class pageSTATS {
         this.list_btn = [
             { id: "stats-equipe", text: "Statistiques de l'équipe" },
             { id: "stats-joueurs", text: "Statistiques des joueurs" },
-        ];  
+            { id: "stats-matchs-recents", text: "Historique des matchs" },
+        ];
     }
 }
 class MENU {
@@ -178,6 +207,7 @@ export {
     MANAGER,
     MATCH,
     MENU,
+    STATS_MATCH,
     pageACCUEIL,
     pageEQUIPE,
     pageMATCH,

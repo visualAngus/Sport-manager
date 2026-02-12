@@ -1,4 +1,4 @@
-import { init, getAllInfo, calculPuissanceJoueur, getEquipeStats, startMatch, currentMenu, pageACCUEIL, pageEQUIPE, pageMATCH, pageSTATS } from "./main.js";
+import { init, getAllInfo, calculPuissanceJoueur, getEquipeStats, startMatch, currentMenu, pageACCUEIL, pageEQUIPE, pageMATCH, pageSTATS, STATS_MATCH, mapMatches } from "./main.js";
 
 function add_btn(id,text){
     const btnElement = document.getElementsByClassName("button-right")[0];
@@ -45,6 +45,13 @@ function changer_page(pageOrEvent) {
         case "mes-stats":
             currentMenu.changerPage(new pageSTATS());
             // document.getElementById("action-stats").style.display = "block";
+            break;
+        case "stats-matchs-recents": 
+            const { equipe } = getAllInfo(); 
+            const listeMatchs = Array.from(mapMatches.values()); 
+            const nouvellePage = new STATS_MATCH(listeMatchs, equipe.nom);
+            
+            currentMenu.changerPage(nouvellePage);
             break;
         default:
             console.error("Page non reconnue :", pageId);

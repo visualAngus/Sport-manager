@@ -1,5 +1,5 @@
 import {orm} from "./orm.js";
-import { POSTE, JOUEUR, EQUIPE, MANAGER, MATCH, MENU, pageACCUEIL, pageEQUIPE, pageMATCH, pageSTATS } from "./class.js";
+import { POSTE, JOUEUR, EQUIPE, MANAGER, MATCH, MENU, pageACCUEIL, pageEQUIPE, pageMATCH, pageSTATS, STATS_MATCH } from "./class.js";
 
 
 let MapJoueurs = new Map();
@@ -193,4 +193,16 @@ const startMatch = async (id_equipe1, id_equipe2) => {
 
     return { match };
 }
-export { init, getAllInfo, calculPuissanceJoueur, getEquipeStats, startMatch, currentMenu, pageACCUEIL, pageEQUIPE, pageMATCH, pageSTATS };
+
+const afficherHistoriqueMatchs = () => {
+    const { equipe } = getAllInfo(); 
+    const tousLesMatchs = Array.from(mapMatches.values()); 
+    
+    const pageStatsDynamique = new STATS_MATCH(tousLesMatchs, equipe.nom);
+    
+    currentMenu.changerPage(pageStatsDynamique);
+    
+    console.log("Nouvelle page créée :", currentMenu.pageActuelle);
+}
+
+export { init, getAllInfo, calculPuissanceJoueur, getEquipeStats, startMatch, currentMenu, pageACCUEIL, pageEQUIPE, pageMATCH, pageSTATS, mapMatches };
