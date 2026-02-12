@@ -50,12 +50,6 @@ function changer_page(pageOrEvent) {
         default:
             console.error("Page non reconnue :", pageId);
     }
-<<<<<<< HEAD
-    document.getElementById("titre_menu").innerText =
-        currentMenu.pageActuelle.titre;
-    document.getElementById("phrase").innerText =
-        currentMenu.pageActuelle.description;
-=======
     document.getElementById('titre_menu').innerText = currentMenu.pageActuelle.titre;
     document.getElementById('phrase').innerText = currentMenu.pageActuelle.description;
 
@@ -63,7 +57,6 @@ function changer_page(pageOrEvent) {
     for (const btn of currentMenu.pageActuelle.list_btn) {
         add_btn(btn.id, btn.text);
     }
->>>>>>> cd58bc5 (j'avais oublie de push dsl)
 }
 
 window.changer_page = changer_page;
