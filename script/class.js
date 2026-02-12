@@ -99,6 +99,8 @@ class pageACCUEIL {
         this.titre = "N-billet Touquet-26";
         this.description = "Bienvenu dans le gestionnaire de sport ultime.";
         this.url_image = "img/basketball.webp";
+        this.list_btn = [
+        ];
     }
 }
 
@@ -109,6 +111,11 @@ class pageEQUIPE {
         this.description =
             "Consultez les statistiques de vos joueurs et apportez des modifications.";
         this.url_image = "img/equipe.png";
+        this.list_btn = [
+            { id: "gerer-joueurs", text: "Gérer mes joueurs" },
+            { id: "gerer-equipe", text: "Gérer mon équipe" },
+            { id: "entrainer", text: "Lancer un entraînement" },
+        ];
     }
 }
 
@@ -119,6 +126,10 @@ class pageMATCH {
         this.description =
             "Préparez-vous pour les prochains affrontements de votre équipe.";
         this.url_image = "img/score.png";
+        this.list_btn = [
+            { id: "planifier-match", text: "Planifier un match" },
+            { id: "resultats-matchs", text: "Résultats des matchs" },
+        ];
     }
 }
 
@@ -129,6 +140,10 @@ class pageSTATS {
         this.description =
             "Analysez les performances de votre équipe et de vos joueurs.";
         this.url_image = "img/trophes.png";
+        this.list_btn = [
+            { id: "stats-equipe", text: "Statistiques de l'équipe" },
+            { id: "stats-joueurs", text: "Statistiques des joueurs" },
+        ];  
     }
 }
 class MENU {

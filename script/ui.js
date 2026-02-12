@@ -1,15 +1,21 @@
-import {
-    init,
-    getAllInfo,
-    calculPuissanceJoueur,
-    getEquipeStats,
-    startMatch,
-    currentMenu,
-    pageACCUEIL,
-    pageEQUIPE,
-    pageMATCH,
-    pageSTATS,
-} from "./main.js";
+import { init, getAllInfo, calculPuissanceJoueur, getEquipeStats, startMatch, currentMenu, pageACCUEIL, pageEQUIPE, pageMATCH, pageSTATS } from "./main.js";
+
+function add_btn(id,text){
+    const btnElement = document.getElementsByClassName("button-right")[0];
+    const newBtn = document.createElement("button");
+    newBtn.id = id;
+    newBtn.className = "Ma-team-btn";
+    newBtn.innerText = text;
+    newBtn.onclick = () => changer_page(id);
+    btnElement.appendChild(newBtn);
+}
+
+function clear_btn() {
+    const btnElement = document.getElementsByClassName("button-right")[0];
+    while (btnElement.firstChild) {
+        btnElement.removeChild(btnElement.firstChild);
+    }
+}
 
 function changer_page(pageOrEvent) {
     const pageId =
@@ -44,10 +50,20 @@ function changer_page(pageOrEvent) {
         default:
             console.error("Page non reconnue :", pageId);
     }
+<<<<<<< HEAD
     document.getElementById("titre_menu").innerText =
         currentMenu.pageActuelle.titre;
     document.getElementById("phrase").innerText =
         currentMenu.pageActuelle.description;
+=======
+    document.getElementById('titre_menu').innerText = currentMenu.pageActuelle.titre;
+    document.getElementById('phrase').innerText = currentMenu.pageActuelle.description;
+
+    clear_btn();
+    for (const btn of currentMenu.pageActuelle.list_btn) {
+        add_btn(btn.id, btn.text);
+    }
+>>>>>>> cd58bc5 (j'avais oublie de push dsl)
 }
 
 window.changer_page = changer_page;
