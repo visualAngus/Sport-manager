@@ -18,11 +18,10 @@ function clear_btn() {
 }
 
 function changer_page(pageOrEvent) {
-    const pageId =
-        typeof pageOrEvent === "string" ? pageOrEvent : pageOrEvent?.target?.id;
-    document.getElementById("action-team").style.display = "none";
-    document.getElementById("action-match").style.display = "none";
-    document.getElementById("action-stats").style.display = "none";
+    const pageId = typeof pageOrEvent === "string" ? pageOrEvent : pageOrEvent?.target?.id;
+    // document.getElementById("action-team").style.display = "none";
+    // document.getElementById("action-match").style.display = "none";
+    // document.getElementById("action-stats").style.display = "none";
     if (!pageId) {
         console.error("Aucun identifiant de page fourni");
         return;
@@ -30,22 +29,22 @@ function changer_page(pageOrEvent) {
     switch (pageId) {
         case "page-accueil":
             currentMenu.changerPage(new pageACCUEIL());
-            document.getElementById("action-menu").style.display = "block";
+            // document.getElementById("action-menu").style.display = "block";
             break;
         case "page-equipe":
         case "ma-team":
             currentMenu.changerPage(new pageEQUIPE());
-            document.getElementById("action-team").style.display = "block";
+            // document.getElementById("action-team").style.display = "block";
             break;
         case "page-match":
         case "mes-matchs":
             currentMenu.changerPage(new pageMATCH());
-            document.getElementById("action-match").style.display = "block";
+            // document.getElementById("action-match").style.display = "block";
             break;
         case "page-stats":
         case "mes-stats":
             currentMenu.changerPage(new pageSTATS());
-            document.getElementById("action-stats").style.display = "block";
+            // document.getElementById("action-stats").style.display = "block";
             break;
         default:
             console.error("Page non reconnue :", pageId);
