@@ -52,7 +52,7 @@ function changer_page(pageOrEvent) {
     document.getElementById('titre_menu').innerText = currentMenu.pageActuelle.titre;
     document.getElementById('phrase').innerText = currentMenu.pageActuelle.description;
 
-    clear_btn();
+    clear_btn();    
     for (const btn of currentMenu.pageActuelle.list_btn) {
         add_btn(btn.id, btn.text);
     }
