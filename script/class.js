@@ -180,6 +180,18 @@ class pageSTATS {
         ];
     }
 }
+
+class GESTION_JOUEURS {
+    constructor(listeJoueurs) {
+        this.nomPage = "Gestion des Joueurs";
+        this.titre = "Gérer mes joueurs";
+        this.description = "Modifier les postes, statuts et titularisations.";
+        this.url_image = "img/equipe.png";
+        this.list_btn = [{ id: "page-equipe", text: "Retour" }];
+        this.listeJoueurs = listeJoueurs;
+    }
+}
+
 class MENU {
     constructor() {
         this.pageActuelle = new pageACCUEIL();
@@ -213,6 +225,7 @@ export {
     MATCH,
     MENU,
     STATS_MATCH,
+    GESTION_JOUEURS,
     pageACCUEIL,
     pageEQUIPE,
     pageMATCH,

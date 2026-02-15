@@ -1,4 +1,4 @@
-import { init, getAllInfo, getOpponentEquipeId, calculPuissanceJoueur, getEquipeStats, startMatch, currentMenu, pageACCUEIL, pageEQUIPE, pageMATCH, pageSTATS, STATS_MATCH, mapMatches } from "./main.js";
+import { init, getAllInfo, getOpponentEquipeId, calculPuissanceJoueur, getEquipeStats, startMatch, changerPosteJoueur, toggleBlessure, toggleTitulaire, MapJoueurs, currentMenu, pageACCUEIL, pageEQUIPE, pageMATCH, pageSTATS, STATS_MATCH, GESTION_JOUEURS, mapMatches } from "./main.js";
 
 function add_btn(id, text) {
     const btnElement = document.getElementsByClassName("button-right")[0];
@@ -84,6 +84,12 @@ async function changer_page(pageOrEvent) {
 
             currentMenu.changerPage(nouvellePage);
             break;
+        case "gerer-joueurs": {
+            const { equipe: equipeGestion } = getAllInfo();
+            const pageGestionJoueurs = new GESTION_JOUEURS(equipeGestion.listeJoueurs);
+            currentMenu.changerPage(pageGestionJoueurs);
+            break;
+        }
         case "retour":
             currentMenu.changerPage(new pageSTATS());
             break;
@@ -112,6 +118,106 @@ function renderPageContent(page) {
     if (!container) return;
 
     container.innerHTML = "";
+
+    if (Array.isArray(page?.listeJoueurs)) {
+        const table = document.createElement("table");
+        table.className = "player-list";
+        table.innerHTML = `<thead>
+            <tr>
+                <th>Nom</th>
+                <th>Poste</th>
+                <th>Statut</th>
+                <th>Puissance</th>
+                <th>Actions</th>
+            </tr>
+        </thead>`;
+
+        const tbody = document.createElement("tbody");
+        page.listeJoueurs.forEach((joueur) => {
+            const row = document.createElement("tr");
+            row.dataset.joueurId = joueur.id;
+            const puissance = Math.round(calculPuissanceJoueur(joueur.id));
+            const statut = joueur.isBlesse ? "Blessé" : (joueur.isjoueurPrincipal ? "Titulaire" : "Remplacant");
+
+            row.innerHTML = `
+                <td>${joueur.nom}</td>
+                <td>
+                    <select data-joueur-id="${joueur.id}" data-action="change-poste">
+                        <option value="meneur" ${joueur.poste.poste.toLowerCase() === "meneur" ? "selected" : ""}>Meneur</option>
+                        <option value="arrière" ${joueur.poste.poste.toLowerCase() === "arrière" ? "selected" : ""}>Arrière</option>
+                        <option value="ailier" ${joueur.poste.poste.toLowerCase() === "ailier" ? "selected" : ""}>Ailier</option>
+                        <option value="ailier fort" ${joueur.poste.poste.toLowerCase() === "ailier fort" ? "selected" : ""}>Ailier Fort</option>
+                        <option value="pivot" ${joueur.poste.poste.toLowerCase() === "pivot" ? "selected" : ""}>Pivot</option>
+                    </select>
+                </td>
+                <td>${statut}</td>
+                <td>${puissance}</td>
+                <td class="player-actions">
+                    <button data-joueur-id="${joueur.id}" data-action="toggle-blessure">${joueur.isBlesse ? "Guérir" : "Blesser"}</button>
+                    <button data-joueur-id="${joueur.id}" data-action="toggle-titulaire">${joueur.isjoueurPrincipal ? "Remplacant" : "Titulaire"}</button>
+                </td>
+            `;
+            tbody.appendChild(row);
+        });
+
+        table.appendChild(tbody);
+        container.appendChild(table);
+
+        const updateJoueurRow = (joueurId) => {
+            const joueur = MapJoueurs.get(joueurId);
+            const row = container.querySelector(`tr[data-joueur-id="${joueurId}"]`);
+            if (!row || !joueur) return;
+
+            const puissance = Math.round(calculPuissanceJoueur(joueur.id));
+            const statut = joueur.isBlesse ? "Blessé" : (joueur.isjoueurPrincipal ? "Titulaire" : "Remplaçant");
+
+            row.innerHTML = `
+                <td>${joueur.nom}</td>
+                <td>
+                    <select data-joueur-id="${joueur.id}" data-action="change-poste">
+                        <option value="meneur" ${joueur.poste.poste.toLowerCase() === "meneur" ? "selected" : ""}>Meneur</option>
+                        <option value="arrière" ${joueur.poste.poste.toLowerCase() === "arrière" ? "selected" : ""}>Arrière</option>
+                        <option value="ailier" ${joueur.poste.poste.toLowerCase() === "ailier" ? "selected" : ""}>Ailier</option>
+                        <option value="ailier fort" ${joueur.poste.poste.toLowerCase() === "ailier fort" ? "selected" : ""}>Ailier Fort</option>
+                        <option value="pivot" ${joueur.poste.poste.toLowerCase() === "pivot" ? "selected" : ""}>Pivot</option>
+                    </select>
+                </td>
+                <td>${statut}</td>
+                <td>${puissance}</td>
+                <td class="player-actions">
+                    <button data-joueur-id="${joueur.id}" data-action="toggle-blessure">${joueur.isBlesse ? "Guérir" : "Blesser"}</button>
+                    <button data-joueur-id="${joueur.id}" data-action="toggle-titulaire">${joueur.isjoueurPrincipal ? "Remplaçant" : "Titulaire"}</button>
+                </td>
+            `;
+        };
+
+        container.addEventListener("click", async (e) => {
+            if (e.target.tagName === "BUTTON") {
+                const joueurId = parseInt(e.target.dataset.joueurId);
+                const action = e.target.dataset.action;
+
+                if (action === "toggle-blessure") {
+                    await toggleBlessure(joueurId);
+                    updateJoueurRow(joueurId);
+                } else if (action === "toggle-titulaire") {
+                    await toggleTitulaire(joueurId);
+                    updateJoueurRow(joueurId);
+                }
+            }
+        });
+
+        container.addEventListener("change", async (e) => {
+            if (e.target.tagName === "SELECT" && e.target.dataset.action === "change-poste") {
+                const joueurId = parseInt(e.target.dataset.joueurId);
+                const nouveauPoste = e.target.value;
+
+                await changerPosteJoueur(joueurId, nouveauPoste);
+                updateJoueurRow(joueurId);
+            }
+        });
+
+        return;
+    }
 
     if (page?.match_result) {
         const match = page.match_result;

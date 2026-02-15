@@ -172,3 +172,57 @@ nav button:hover {
     color: var(--color-orange);
     font-weight: 700;
 }
+
+.player-list {
+    width: 100%;
+    max-width: 960px;
+    border-collapse: collapse;
+    margin-top: 8px;
+}
+
+.player-list th,
+.player-list td {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 10px 12px;
+    text-align: left;
+}
+
+.player-list th {
+    color: var(--color-orange);
+    font-weight: 700;
+}
+
+.player-list select {
+    background-color: rgba(0, 0, 0, 0.8);
+    color: var(--color-white);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 4px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.player-list select:hover {
+    background-color: rgba(0, 0, 0, 0.9);
+}
+
+.player-list select option {
+    background-color: var(--color-black);
+    color: var(--color-white);
+    padding: 4px 8px;
+}
+
+.player-actions button {
+    background-color: var(--color-orange);
+    color: var(--color-white);
+    border: none;
+    padding: 6px 12px;
+    margin-right: 6px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+}
+
+.player-actions button:hover {
+    background-color: var(--color-red);
+}

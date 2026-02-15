@@ -1,5 +1,5 @@
 import { orm } from "./orm.js";
-import { POSTE, JOUEUR, EQUIPE, MANAGER, MATCH, MENU, pageACCUEIL, pageEQUIPE, pageMATCH, pageSTATS, STATS_MATCH } from "./class.js";
+import { POSTE, JOUEUR, EQUIPE, MANAGER, MATCH, MENU, pageACCUEIL, pageEQUIPE, pageMATCH, pageSTATS, STATS_MATCH, GESTION_JOUEURS } from "./class.js";
 
 
 let MapJoueurs = new Map();
@@ -214,4 +214,31 @@ const afficherHistoriqueMatchs = () => {
     console.log("Nouvelle page créée :", currentMenu.pageActuelle);
 }
 
-export { init, getAllInfo, getOpponentEquipeId, calculPuissanceJoueur, getEquipeStats, startMatch, currentMenu, pageACCUEIL, pageEQUIPE, pageMATCH, pageSTATS, STATS_MATCH, mapMatches };
+const changerPosteJoueur = async (id_joueur, nouveauPoste) => {
+    const joueur = MapJoueurs.get(id_joueur);
+    if (!joueur) throw new Error("Joueur non trouvé");
+
+    joueur.changementPoste(nouveauPoste);
+
+    await orm.update('JOUEURS', { poste: nouveauPoste }, 'id = ?', [id_joueur]);
+}
+
+const toggleBlessure = async (id_joueur) => {
+    const joueur = MapJoueurs.get(id_joueur);
+    if (!joueur) throw new Error("Joueur non trouvé");
+
+    joueur.isBlesse = !joueur.isBlesse;
+
+    await orm.update('JOUEURS', { isBlesse: joueur.isBlesse ? 1 : 0 }, 'id = ?', [id_joueur]);
+}
+
+const toggleTitulaire = async (id_joueur) => {
+    const joueur = MapJoueurs.get(id_joueur);
+    if (!joueur) throw new Error("Joueur non trouvé");
+
+    joueur.isjoueurPrincipal = !joueur.isjoueurPrincipal;
+
+    await orm.update('JOUEURS', { isjoueurPrincipal: joueur.isjoueurPrincipal ? 1 : 0 }, 'id = ?', [id_joueur]);
+}
+
+export { init, getAllInfo, getOpponentEquipeId, calculPuissanceJoueur, getEquipeStats, startMatch, changerPosteJoueur, toggleBlessure, toggleTitulaire, MapJoueurs, currentMenu, pageACCUEIL, pageEQUIPE, pageMATCH, pageSTATS, STATS_MATCH, GESTION_JOUEURS, mapMatches };
