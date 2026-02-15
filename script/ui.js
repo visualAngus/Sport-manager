@@ -1,4 +1,4 @@
-import { init, getAllInfo, getOpponentEquipeId, calculPuissanceJoueur, getEquipeStats, startMatch, changerPosteJoueur, toggleBlessure, toggleTitulaire, MapJoueurs, currentMenu, pageACCUEIL, pageEQUIPE, pageMATCH, pageSTATS, STATS_MATCH, GESTION_JOUEURS, mapMatches } from "./main.js";
+import { init, getAllInfo, getOpponentEquipeId, calculPuissanceJoueur, getEquipeStats, startMatch, changerPosteJoueur, toggleBlessure, toggleTitulaire, changerNomEquipe, MapJoueurs, MapEquipes, currentMenu, pageACCUEIL, pageEQUIPE, pageMATCH, pageSTATS, STATS_MATCH, GESTION_JOUEURS, GESTION_EQUIPE, mapMatches } from "./main.js";
 
 function add_btn(id, text) {
     const btnElement = document.getElementsByClassName("button-right")[0];
@@ -88,6 +88,13 @@ async function changer_page(pageOrEvent) {
             const { equipe: equipeGestion } = getAllInfo();
             const pageGestionJoueurs = new GESTION_JOUEURS(equipeGestion.listeJoueurs);
             currentMenu.changerPage(pageGestionJoueurs);
+            break;
+        }
+        case "gerer-equipe": {
+            const { equipe: equipeGestion } = getAllInfo();
+            const stats = getEquipeStats(equipeGestion.id);
+            const pageGestionEquipe = new GESTION_EQUIPE(equipeGestion, stats);
+            currentMenu.changerPage(pageGestionEquipe);
             break;
         }
         case "retour":
@@ -213,6 +220,55 @@ function renderPageContent(page) {
 
                 await changerPosteJoueur(joueurId, nouveauPoste);
                 updateJoueurRow(joueurId);
+            }
+        });
+
+        return;
+    }
+
+    if (page?.equipe) {
+        const equipe = page.equipe;
+        const stats = page.stats;
+
+        const statsCard = document.createElement("div");
+        statsCard.className = "team-stats-card";
+        statsCard.innerHTML = `
+            <div class="stat-item">
+                <span class="stat-label">Matchs joués</span>
+                <span class="stat-value">${stats.matchsJoues}</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Victoires</span>
+                <span class="stat-value">${stats.victoires}</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Défaites</span>
+                <span class="stat-value">${stats.matchsJoues - stats.victoires}</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Puissance moyenne</span>
+                <span class="stat-value">${Math.round(stats.puissanceMoyenne)}</span>
+            </div>
+        `;
+        container.appendChild(statsCard);
+
+        const nameSection = document.createElement("div");
+        nameSection.className = "team-name-section";
+        nameSection.innerHTML = `
+            <label for="team-name">Nom de l'équipe</label>
+            <div class="team-name-edit">
+                <input type="text" id="team-name" value="${equipe.nom}" />
+                <button id="save-team-name">Sauvegarder</button>
+            </div>
+        `;
+        container.appendChild(nameSection);
+
+        container.querySelector("#save-team-name").addEventListener("click", async () => {
+            const input = container.querySelector("#team-name");
+            const nouveauNom = input.value.trim();
+            if (nouveauNom && nouveauNom !== equipe.nom) {
+                await changerNomEquipe(equipe.id, nouveauNom);
+                changer_page("gerer-equipe");
             }
         });
 

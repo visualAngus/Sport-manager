@@ -192,6 +192,18 @@ class GESTION_JOUEURS {
     }
 }
 
+class GESTION_EQUIPE {
+    constructor(equipe, stats) {
+        this.nomPage = "Gestion de l'Équipe";
+        this.titre = "Gérer mon équipe";
+        this.description = "Modifier le nom et consulter les statistiques.";
+        this.url_image = "img/equipe.png";
+        this.list_btn = [{ id: "page-equipe", text: "Retour" }];
+        this.equipe = equipe;
+        this.stats = stats;
+    }
+}
+
 class MENU {
     constructor() {
         this.pageActuelle = new pageACCUEIL();
@@ -226,6 +238,7 @@ export {
     MENU,
     STATS_MATCH,
     GESTION_JOUEURS,
+    GESTION_EQUIPE,
     pageACCUEIL,
     pageEQUIPE,
     pageMATCH,

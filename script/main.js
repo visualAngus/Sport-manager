@@ -1,5 +1,5 @@
 import { orm } from "./orm.js";
-import { POSTE, JOUEUR, EQUIPE, MANAGER, MATCH, MENU, pageACCUEIL, pageEQUIPE, pageMATCH, pageSTATS, STATS_MATCH, GESTION_JOUEURS } from "./class.js";
+import { POSTE, JOUEUR, EQUIPE, MANAGER, MATCH, MENU, pageACCUEIL, pageEQUIPE, pageMATCH, pageSTATS, STATS_MATCH, GESTION_JOUEURS, GESTION_EQUIPE } from "./class.js";
 
 
 let MapJoueurs = new Map();
@@ -241,4 +241,13 @@ const toggleTitulaire = async (id_joueur) => {
     await orm.update('JOUEURS', { isjoueurPrincipal: joueur.isjoueurPrincipal ? 1 : 0 }, 'id = ?', [id_joueur]);
 }
 
-export { init, getAllInfo, getOpponentEquipeId, calculPuissanceJoueur, getEquipeStats, startMatch, changerPosteJoueur, toggleBlessure, toggleTitulaire, MapJoueurs, currentMenu, pageACCUEIL, pageEQUIPE, pageMATCH, pageSTATS, STATS_MATCH, GESTION_JOUEURS, mapMatches };
+const changerNomEquipe = async (id_equipe, nouveauNom) => {
+    const equipe = MapEquipes.get(id_equipe);
+    if (!equipe) throw new Error("Équipe non trouvée");
+
+    equipe.nom = nouveauNom;
+
+    await orm.update('EQUIPES', { nom: nouveauNom }, 'id = ?', [id_equipe]);
+}
+
+export { init, getAllInfo, getOpponentEquipeId, calculPuissanceJoueur, getEquipeStats, startMatch, changerPosteJoueur, toggleBlessure, toggleTitulaire, changerNomEquipe, MapJoueurs, MapEquipes, currentMenu, pageACCUEIL, pageEQUIPE, pageMATCH, pageSTATS, STATS_MATCH, GESTION_JOUEURS, GESTION_EQUIPE, mapMatches };

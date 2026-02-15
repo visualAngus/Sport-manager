@@ -226,3 +226,82 @@ nav button:hover {
 .player-actions button:hover {
     background-color: var(--color-red);
 }
+
+.team-stats-card {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.stat-item {
+    background-color: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.stat-label {
+    color: var(--color-orange);
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-white);
+}
+
+.team-name-section {
+    background-color: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    padding: 20px;
+    max-width: 500px;
+}
+
+.team-name-section label {
+    display: block;
+    color: var(--color-orange);
+    font-size: 1.1rem;
+    margin-bottom: 12px;
+}
+
+.team-name-edit {
+    display: flex;
+    gap: 12px;
+}
+
+.team-name-edit input {
+    flex: 1;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: var(--color-white);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.team-name-edit input:focus {
+    outline: none;
+    border-color: var(--color-orange);
+}
+
+.team-name-edit button {
+    background-color: var(--color-orange);
+    color: var(--color-white);
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.team-name-edit button:hover {
+    background-color: var(--color-red);
+}
