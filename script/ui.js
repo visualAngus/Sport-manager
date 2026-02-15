@@ -1,4 +1,4 @@
-import { init, getAllInfo, getOpponentEquipeId, calculPuissanceJoueur, getEquipeStats, startMatch, changerPosteJoueur, toggleBlessure, toggleTitulaire, changerNomEquipe, MapJoueurs, MapEquipes, currentMenu, pageACCUEIL, pageEQUIPE, pageMATCH, pageSTATS, STATS_MATCH, GESTION_JOUEURS, GESTION_EQUIPE, mapMatches } from "./main.js";
+import { init, getAllInfo, getOpponentEquipeId, calculPuissanceJoueur, getEquipeStats, startMatch, changerPosteJoueur, toggleBlessure, toggleTitulaire, changerNomEquipe, lancerEntrainement, MapJoueurs, MapEquipes, currentMenu, pageACCUEIL, pageEQUIPE, pageMATCH, pageSTATS, STATS_MATCH, GESTION_JOUEURS, GESTION_EQUIPE, ENTRAINEMENT, mapMatches } from "./main.js";
 
 function add_btn(id, text) {
     const btnElement = document.getElementsByClassName("button-right")[0];
@@ -95,6 +95,13 @@ async function changer_page(pageOrEvent) {
             const stats = getEquipeStats(equipeGestion.id);
             const pageGestionEquipe = new GESTION_EQUIPE(equipeGestion, stats);
             currentMenu.changerPage(pageGestionEquipe);
+            break;
+        }
+        case "entrainer": {
+            const { equipe: equipeEntrainement } = getAllInfo();
+            const resultats = await lancerEntrainement(equipeEntrainement.id);
+            const pageEntrainement = new ENTRAINEMENT(resultats);
+            currentMenu.changerPage(pageEntrainement);
             break;
         }
         case "retour":
@@ -300,6 +307,49 @@ function renderPageContent(page) {
 
         detailTable.appendChild(tbody);
         container.appendChild(detailTable);
+        return;
+    }
+
+    if (Array.isArray(page?.resultatsEntrainement)) {
+        if (page.resultatsEntrainement.length === 0) {
+            container.textContent = "Aucun joueur disponible pour l'entraînement.";
+            return;
+        }
+
+        const table = document.createElement("table");
+        table.className = "training-results";
+        table.innerHTML = `<thead>
+            <tr>
+                <th>Joueur</th>
+                <th>Progressions</th>
+            </tr>
+        </thead>`;
+
+        const tbody = document.createElement("tbody");
+        page.resultatsEntrainement.forEach((resultat) => {
+            const row = document.createElement("tr");
+            const joueur = resultat.joueur;
+            const progressions = resultat.progressions;
+
+            const progressionsList = Object.entries(progressions).map(([stat, data]) => {
+                const statLabel = {
+                    force: "Force",
+                    vitesse: "Vitesse",
+                    endurance: "Endurance",
+                    technique: "Technique"
+                }[stat] || stat;
+                return `<span class="progression">${statLabel}: ${data.avant} → ${data.apres} <span class="gain">(+${data.gain})</span></span>`;
+            }).join("");
+
+            row.innerHTML = `
+                <td class="player-name">${joueur.nom}</td>
+                <td class="progressions-list">${progressionsList}</td>
+            `;
+            tbody.appendChild(row);
+        });
+
+        table.appendChild(tbody);
+        container.appendChild(table);
         return;
     }
 

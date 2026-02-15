@@ -204,6 +204,20 @@ class GESTION_EQUIPE {
     }
 }
 
+class ENTRAINEMENT {
+    constructor(resultatsEntrainement) {
+        this.nomPage = "Entraînement";
+        this.titre = "Résultats de l'entraînement";
+        this.description = "Vos joueurs se sont entraînés et ont progressé !";
+        this.url_image = "img/equipe.png";
+        this.list_btn = [
+            { id: "entrainer", text: "Nouvel entraînement" },
+            { id: "page-equipe", text: "Retour" }
+        ];
+        this.resultatsEntrainement = resultatsEntrainement;
+    }
+}
+
 class MENU {
     constructor() {
         this.pageActuelle = new pageACCUEIL();
@@ -239,6 +253,7 @@ export {
     STATS_MATCH,
     GESTION_JOUEURS,
     GESTION_EQUIPE,
+    ENTRAINEMENT,
     pageACCUEIL,
     pageEQUIPE,
     pageMATCH,

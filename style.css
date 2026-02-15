@@ -1,11 +1,11 @@
-:root {
-    --color-white: #ffffff;
-    --color-black: #000000;
-    --color-red: #e91515;
-    --color-orange: #e84c13;
+:root{
+    --color-white : #ffffff;
+    --color-black : #000000;
+    --color-red : #e91515;
+    --color-orange : #e84c13;
 }
 
-* {
+*{
     box-sizing: border-box;
     margin: 0;
     padding: 0;
@@ -13,14 +13,13 @@
     font-weight: 400;
     font-style: normal;
 }
-
-body {
+body{
     background-color: var(--color-black);
     color: var(--color-white);
     position: relative;
 }
 
-header {
+header{
     /* background-color: var(--color-white); */
     text-align: start;
     display: flex;
@@ -28,8 +27,7 @@ header {
     align-items: center;
     padding: 10px 20px;
 }
-
-.image-container {
+.image-container{
     position: absolute;
     width: 100%;
     height: 100vh;
@@ -38,8 +36,7 @@ header {
     left: 0;
     z-index: -1;
 }
-
-.image-container img {
+.image-container img{
     position: absolute;
     top: 0;
     left: 0;
@@ -49,36 +46,31 @@ header {
     transition: opacity 0.5s ease-in-out;
 }
 
-.logo h1 {
+.logo h1{
     font-size: 4rem;
     font-weight: 900;
     color: var(--color-white);
 }
-
-.logo a {
+.logo a{
     text-decoration: none;
     font-weight: 900;
 }
-
-.red-text {
+.red-text{
     color: var(--color-orange);
 }
-
-.menu-profile {
+.menu-profile{
     height: 50px;
     display: flex;
     align-items: center;
     flex-direction: row;
     gap: 10px;
 }
-
-.menu-profile h2 {
+.menu-profile h2{
     color: var(--color-white);
     font-size: 1.125rem;
     padding-left: 20px;
 }
-
-.menu-profil__rond {
+.menu-profil__rond{
     width: 40px;
     height: 40px;
     border-radius: 50%;
@@ -87,15 +79,13 @@ header {
     align-items: center;
     justify-content: center;
 }
-
-.menu-profil__tete {
+.menu-profil__tete{
     width: 20px;
     height: 20px;
     background-color: var(--color-orange);
     border-radius: 50%;
 }
-
-.menu-profil__corps {
+.menu-profil__corps{
     width: 30px;
     height: 15px;
     background-color: var(--color-orange);
@@ -103,13 +93,13 @@ header {
     margin-top: 5px;
 }
 
-nav {
+nav{
     display: flex;
     gap: 20px;
     padding: 10px 20px;
 }
 
-nav button {
+nav button{
     background-color: transparent;
     border: none;
     color: var(--color-white);
@@ -119,8 +109,7 @@ nav button {
     transition: all 0.5s ease;
     border-radius: 5px;
 }
-
-nav button:hover {
+nav button:hover{
     background-color: var(--color-white);
     color: var(--color-black);
 }
@@ -145,163 +134,3 @@ nav button:hover {
     margin-left: 20px;
 }
 
-#contenu-dynamique {
-    margin: 20px;
-}
-
-.match-summary {
-    font-size: 1.4rem;
-    margin-bottom: 12px;
-}
-
-.match-detail {
-    width: 100%;
-    max-width: 720px;
-    border-collapse: collapse;
-    margin-top: 8px;
-}
-
-.match-detail th,
-.match-detail td {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-    padding: 8px 12px;
-    text-align: left;
-}
-
-.match-detail th {
-    color: var(--color-orange);
-    font-weight: 700;
-}
-
-.player-list {
-    width: 100%;
-    max-width: 960px;
-    border-collapse: collapse;
-    margin-top: 8px;
-}
-
-.player-list th,
-.player-list td {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-    padding: 10px 12px;
-    text-align: left;
-}
-
-.player-list th {
-    color: var(--color-orange);
-    font-weight: 700;
-}
-
-.player-list select {
-    background-color: rgba(0, 0, 0, 0.8);
-    color: var(--color-white);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    padding: 4px 8px;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.player-list select:hover {
-    background-color: rgba(0, 0, 0, 0.9);
-}
-
-.player-list select option {
-    background-color: var(--color-black);
-    color: var(--color-white);
-    padding: 4px 8px;
-}
-
-.player-actions button {
-    background-color: var(--color-orange);
-    color: var(--color-white);
-    border: none;
-    padding: 6px 12px;
-    margin-right: 6px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    transition: background-color 0.3s ease;
-}
-
-.player-actions button:hover {
-    background-color: var(--color-red);
-}
-
-.team-stats-card {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 16px;
-    margin-bottom: 24px;
-}
-
-.stat-item {
-    background-color: rgba(0, 0, 0, 0.5);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 8px;
-    padding: 16px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.stat-label {
-    color: var(--color-orange);
-    font-size: 0.9rem;
-    margin-bottom: 8px;
-}
-
-.stat-value {
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--color-white);
-}
-
-.team-name-section {
-    background-color: rgba(0, 0, 0, 0.5);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 8px;
-    padding: 20px;
-    max-width: 500px;
-}
-
-.team-name-section label {
-    display: block;
-    color: var(--color-orange);
-    font-size: 1.1rem;
-    margin-bottom: 12px;
-}
-
-.team-name-edit {
-    display: flex;
-    gap: 12px;
-}
-
-.team-name-edit input {
-    flex: 1;
-    background-color: rgba(255, 255, 255, 0.1);
-    color: var(--color-white);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    padding: 8px 12px;
-    border-radius: 4px;
-    font-size: 1rem;
-}
-
-.team-name-edit input:focus {
-    outline: none;
-    border-color: var(--color-orange);
-}
-
-.team-name-edit button {
-    background-color: var(--color-orange);
-    color: var(--color-white);
-    border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: background-color 0.3s ease;
-}
-
-.team-name-edit button:hover {
-    background-color: var(--color-red);
-}

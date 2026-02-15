@@ -1,5 +1,5 @@
 import { orm } from "./orm.js";
-import { POSTE, JOUEUR, EQUIPE, MANAGER, MATCH, MENU, pageACCUEIL, pageEQUIPE, pageMATCH, pageSTATS, STATS_MATCH, GESTION_JOUEURS, GESTION_EQUIPE } from "./class.js";
+import { POSTE, JOUEUR, EQUIPE, MANAGER, MATCH, MENU, pageACCUEIL, pageEQUIPE, pageMATCH, pageSTATS, STATS_MATCH, GESTION_JOUEURS, GESTION_EQUIPE, ENTRAINEMENT } from "./class.js";
 
 
 let MapJoueurs = new Map();
@@ -250,4 +250,53 @@ const changerNomEquipe = async (id_equipe, nouveauNom) => {
     await orm.update('EQUIPES', { nom: nouveauNom }, 'id = ?', [id_equipe]);
 }
 
-export { init, getAllInfo, getOpponentEquipeId, calculPuissanceJoueur, getEquipeStats, startMatch, changerPosteJoueur, toggleBlessure, toggleTitulaire, changerNomEquipe, MapJoueurs, MapEquipes, currentMenu, pageACCUEIL, pageEQUIPE, pageMATCH, pageSTATS, STATS_MATCH, GESTION_JOUEURS, GESTION_EQUIPE, mapMatches };
+const lancerEntrainement = async (id_equipe) => {
+    const equipe = MapEquipes.get(id_equipe);
+    if (!equipe) throw new Error("Équipe non trouvée");
+
+    const resultats = [];
+    const statsDisponibles = ['force', 'vitesse', 'endurance', 'technique'];
+
+    for (const joueur of equipe.listeJoueurs) {
+        // Les joueurs blessés ne s'entraînent pas
+        if (joueur.isBlesse) continue;
+
+        const progressions = {};
+        // Chaque joueur progresse dans 1 à 3 stats aléatoires
+        const nbStats = Math.floor(Math.random() * 3) + 1;
+        const statsAmeliorer = [];
+        
+        // Sélectionner aléatoirement les stats à améliorer
+        while (statsAmeliorer.length < nbStats) {
+            const stat = statsDisponibles[Math.floor(Math.random() * statsDisponibles.length)];
+            if (!statsAmeliorer.includes(stat)) {
+                statsAmeliorer.push(stat);
+            }
+        }
+
+        // Améliorer chaque stat sélectionnée
+        for (const stat of statsAmeliorer) {
+            const progression = Math.floor(Math.random() * 5) + 1; // +1 à +5
+            const ancienneValeur = joueur[stat];
+            const nouvelleValeur = Math.min(100, ancienneValeur + progression);
+            joueur[stat] = nouvelleValeur;
+            progressions[stat] = {
+                avant: ancienneValeur,
+                apres: nouvelleValeur,
+                gain: nouvelleValeur - ancienneValeur
+            };
+
+            // Mettre à jour la DB
+            await orm.update('JOUEURS', { [stat]: nouvelleValeur }, 'id = ?', [joueur.id]);
+        }
+
+        resultats.push({
+            joueur: joueur,
+            progressions: progressions
+        });
+    }
+
+    return resultats;
+}
+
+export { init, getAllInfo, getOpponentEquipeId, calculPuissanceJoueur, getEquipeStats, startMatch, changerPosteJoueur, toggleBlessure, toggleTitulaire, changerNomEquipe, lancerEntrainement, MapJoueurs, MapEquipes, currentMenu, pageACCUEIL, pageEQUIPE, pageMATCH, pageSTATS, STATS_MATCH, GESTION_JOUEURS, GESTION_EQUIPE, ENTRAINEMENT, mapMatches };
