@@ -1,5 +1,5 @@
 import { orm } from "./orm.js";
-import { POSTE, JOUEUR, EQUIPE, MANAGER, MATCH, MENU, pageACCUEIL, pageEQUIPE, pageMATCH, pageSTATS, STATS_MATCH, GESTION_JOUEURS, GESTION_EQUIPE, ENTRAINEMENT } from "./class.js";
+import { POSTE, JOUEUR, EQUIPE, MANAGER, MATCH, MENU, pageACCUEIL, pageEQUIPE, pageMATCH, pageSTATS, STATS_MATCH, GESTION_JOUEURS, GESTION_EQUIPE, STATS_EQUIPEONLY, STATS_JOUEURS_ONLY, ENTRAINEMENT } from "./class.js";
 
 
 let MapJoueurs = new Map();
@@ -265,7 +265,7 @@ const lancerEntrainement = async (id_equipe) => {
         // Chaque joueur progresse dans 1 à 3 stats aléatoires
         const nbStats = Math.floor(Math.random() * 3) + 1;
         const statsAmeliorer = [];
-        
+
         // Sélectionner aléatoirement les stats à améliorer
         while (statsAmeliorer.length < nbStats) {
             const stat = statsDisponibles[Math.floor(Math.random() * statsDisponibles.length)];
@@ -299,4 +299,4 @@ const lancerEntrainement = async (id_equipe) => {
     return resultats;
 }
 
-export { init, getAllInfo, getOpponentEquipeId, calculPuissanceJoueur, getEquipeStats, startMatch, changerPosteJoueur, toggleBlessure, toggleTitulaire, changerNomEquipe, lancerEntrainement, MapJoueurs, MapEquipes, currentMenu, pageACCUEIL, pageEQUIPE, pageMATCH, pageSTATS, STATS_MATCH, GESTION_JOUEURS, GESTION_EQUIPE, ENTRAINEMENT, mapMatches };
+export { init, getAllInfo, getOpponentEquipeId, calculPuissanceJoueur, getEquipeStats, startMatch, changerPosteJoueur, toggleBlessure, toggleTitulaire, changerNomEquipe, lancerEntrainement, MapJoueurs, MapEquipes, currentMenu, pageACCUEIL, pageEQUIPE, pageMATCH, pageSTATS, STATS_MATCH, GESTION_JOUEURS, GESTION_EQUIPE, STATS_EQUIPEONLY, STATS_JOUEURS_ONLY, ENTRAINEMENT, mapMatches };

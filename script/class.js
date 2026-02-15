@@ -218,6 +218,31 @@ class ENTRAINEMENT {
     }
 }
 
+class STATS_EQUIPEONLY {
+    constructor(equipe, stats) {
+        this.nomPage = "Statistiques de l'Équipe";
+        this.titre = "Statistiques de mon équipe";
+        this.description = "Consultez les performances de votre équipe.";
+        this.url_image = "img/equipe.png";
+        this.list_btn = [{ id: "page-stats", text: "Retour" }];
+        this.equipe = equipe;
+        this.stats = stats;
+        this.readOnly = true;
+    }
+}
+
+class STATS_JOUEURS_ONLY {
+    constructor(listeJoueurs) {
+        this.nomPage = "Statistiques des Joueurs";
+        this.titre = "Statistiques de mes joueurs";
+        this.description = "Consultez les performances individuelles de vos joueurs.";
+        this.url_image = "img/joueurs.png";
+        this.list_btn = [{ id: "page-stats", text: "Retour" }];
+        this.listeJoueurs = listeJoueurs;
+        this.readOnly = true;
+    }
+}
+
 class MENU {
     constructor() {
         this.pageActuelle = new pageACCUEIL();
@@ -253,6 +278,8 @@ export {
     STATS_MATCH,
     GESTION_JOUEURS,
     GESTION_EQUIPE,
+    STATS_EQUIPEONLY,
+    STATS_JOUEURS_ONLY,
     ENTRAINEMENT,
     pageACCUEIL,
     pageEQUIPE,

@@ -1,4 +1,4 @@
-import { init, getAllInfo, getOpponentEquipeId, calculPuissanceJoueur, getEquipeStats, startMatch, changerPosteJoueur, toggleBlessure, toggleTitulaire, changerNomEquipe, lancerEntrainement, MapJoueurs, MapEquipes, currentMenu, pageACCUEIL, pageEQUIPE, pageMATCH, pageSTATS, STATS_MATCH, GESTION_JOUEURS, GESTION_EQUIPE, ENTRAINEMENT, mapMatches } from "./main.js";
+import { init, getAllInfo, getOpponentEquipeId, calculPuissanceJoueur, getEquipeStats, startMatch, changerPosteJoueur, toggleBlessure, toggleTitulaire, changerNomEquipe, lancerEntrainement, MapJoueurs, MapEquipes, currentMenu, pageACCUEIL, pageEQUIPE, pageMATCH, pageSTATS, STATS_MATCH, GESTION_JOUEURS, GESTION_EQUIPE, STATS_EQUIPEONLY, STATS_JOUEURS_ONLY, ENTRAINEMENT, mapMatches } from "./main.js";
 
 function add_btn(id, text) {
     const btnElement = document.getElementsByClassName("button-right")[0];
@@ -84,6 +84,19 @@ async function changer_page(pageOrEvent) {
 
             currentMenu.changerPage(nouvellePage);
             break;
+        case "stats-equipe": {
+            const { equipe: equipeStats } = getAllInfo();
+            const statsEquipe = getEquipeStats(equipeStats.id);
+            const pageStatsEquipe = new STATS_EQUIPEONLY(equipeStats, statsEquipe);
+            currentMenu.changerPage(pageStatsEquipe);
+            break;
+        }
+        case "stats-joueurs": {
+            const { equipe: equipeJoueurs } = getAllInfo();
+            const pageStatsJoueurs = new STATS_JOUEURS_ONLY(equipeJoueurs.listeJoueurs);
+            currentMenu.changerPage(pageStatsJoueurs);
+            break;
+        }
         case "gerer-joueurs": {
             const { equipe: equipeGestion } = getAllInfo();
             const pageGestionJoueurs = new GESTION_JOUEURS(equipeGestion.listeJoueurs);
@@ -133,7 +146,7 @@ function renderPageContent(page) {
 
     container.innerHTML = "";
 
-    if (Array.isArray(page?.listeJoueurs)) {
+    if (Array.isArray(page?.listeJoueurs) && !page?.readOnly) {
         const table = document.createElement("table");
         table.className = "player-list";
         table.innerHTML = `<thead>
@@ -259,25 +272,78 @@ function renderPageContent(page) {
         `;
         container.appendChild(statsCard);
 
-        const nameSection = document.createElement("div");
-        nameSection.className = "team-name-section";
-        nameSection.innerHTML = `
-            <label for="team-name">Nom de l'équipe</label>
-            <div class="team-name-edit">
-                <input type="text" id="team-name" value="${equipe.nom}" />
-                <button id="save-team-name">Sauvegarder</button>
-            </div>
-        `;
-        container.appendChild(nameSection);
+        // Ne montrer la section de modification du nom que pour GESTION_EQUIPE (pas readOnly)
+        if (!page.readOnly) {
+            const nameSection = document.createElement("div");
+            nameSection.className = "team-name-section";
+            nameSection.innerHTML = `
+                <label for="team-name">Nom de l'équipe</label>
+                <div class="team-name-edit">
+                    <input type="text" id="team-name" value="${equipe.nom}" />
+                    <button id="save-team-name">Sauvegarder</button>
+                </div>
+            `;
+            container.appendChild(nameSection);
 
-        container.querySelector("#save-team-name").addEventListener("click", async () => {
-            const input = container.querySelector("#team-name");
-            const nouveauNom = input.value.trim();
-            if (nouveauNom && nouveauNom !== equipe.nom) {
-                await changerNomEquipe(equipe.id, nouveauNom);
-                changer_page("gerer-equipe");
-            }
+            container.querySelector("#save-team-name").addEventListener("click", async () => {
+                const input = container.querySelector("#team-name");
+                const nouveauNom = input.value.trim();
+                if (nouveauNom && nouveauNom !== equipe.nom) {
+                    await changerNomEquipe(equipe.id, nouveauNom);
+                    changer_page("gerer-equipe");
+                }
+            });
+        }
+
+        return;
+    }
+
+    // Rendu pour la page stats des joueurs (lecture seule)
+    if (page?.readOnly && Array.isArray(page?.listeJoueurs)) {
+        const table = document.createElement("table");
+        table.className = "player-list";
+        table.innerHTML = `<thead>
+            <tr>
+                <th>Nom</th>
+                <th>Poste</th>
+                <th>Statut</th>
+                <th>Puissance</th>
+                <th>Force</th>
+                <th>Vitesse</th>
+                <th>Endurance</th>
+                <th>Technique</th>
+                <th>Points</th>
+                <th>Passes</th>
+                <th>Interceptions</th>
+                <th>Contres</th>
+            </tr>
+        </thead>`;
+
+        const tbody = document.createElement("tbody");
+        page.listeJoueurs.forEach((joueur) => {
+            const row = document.createElement("tr");
+            const puissance = Math.round(calculPuissanceJoueur(joueur.id));
+            const statut = joueur.isBlesse ? "Blessé" : (joueur.isjoueurPrincipal ? "Titulaire" : "Remplacant");
+
+            row.innerHTML = `
+                <td>${joueur.nom}</td>
+                <td>${joueur.poste.poste}</td>
+                <td>${statut}</td>
+                <td>${puissance}</td>
+                <td>${joueur.force}</td>
+                <td>${joueur.vitesse}</td>
+                <td>${joueur.endurance}</td>
+                <td>${joueur.technique}</td>
+                <td>${joueur.points}</td>
+                <td>${joueur.passes}</td>
+                <td>${joueur.interceptions}</td>
+                <td>${joueur.contres}</td>
+            `;
+            tbody.appendChild(row);
         });
+
+        table.appendChild(tbody);
+        container.appendChild(table);
 
         return;
     }
