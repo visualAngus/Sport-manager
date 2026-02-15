@@ -93,13 +93,20 @@ class MATCH {
     }
 }
 
-class pageSTATS_MATCH {
+class STATS_MATCH {
     constructor(liste_matchs_recents, nomMonEquipe) {
-        this.liste_matchs_recents = liste_matchs_recents
+        const matchsEquipe = liste_matchs_recents.filter((match) =>
+            match.Winner?.nom === nomMonEquipe || match.Loser?.nom === nomMonEquipe,
+        );
+        const matchsTries = matchsEquipe.sort(
+            (a, b) => new Date(a.date) - new Date(b.date),
+        );
+
+        this.liste_matchs_recents = matchsTries;
         this.nomPage = "Détails des Matchs";
-        this.titre = "Historique des Matchs"
-        this.derniers_matchs = liste_matchs_recents.slice(-10)
-        this.description = this.calculerBilan(nomMonEquipe)
+        this.titre = "Historique des Matchs";
+        this.derniers_matchs = matchsTries.slice(-10);
+        this.description = this.calculerBilan(nomMonEquipe);
         this.url_image = "img/score.png";
         this.list_btn = [{ id: "retour", text: "Retour" }];
     }
@@ -107,14 +114,12 @@ class pageSTATS_MATCH {
         let nombreVictoires = 0;
         let nombreDefaites = 0;
 
-        this.derniers_matchs.forEach(match => {
-            
-            if ( match.Winner === nomMonEquipe ) {
-                nombreVictoires = nombreVictoires + 1; // C'est une victoire
-            } else {
-                nombreDefaites = nombreDefaites + 1;   // C'est une défaite
+        this.derniers_matchs.forEach((match) => {
+            if (match.Winner?.nom === nomMonEquipe) {
+                nombreVictoires += 1;
+            } else if (match.Loser?.nom === nomMonEquipe) {
+                nombreDefaites += 1;
             }
-
         });
 
         return "Bilan : " + nombreVictoires + "V - " + nombreDefaites + "D";

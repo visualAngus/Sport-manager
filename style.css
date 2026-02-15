@@ -1,11 +1,11 @@
-:root{
-    --color-white : #ffffff;
-    --color-black : #000000;
-    --color-red : #e91515;
-    --color-orange : #e84c13;
+:root {
+    --color-white: #ffffff;
+    --color-black: #000000;
+    --color-red: #e91515;
+    --color-orange: #e84c13;
 }
 
-*{
+* {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
@@ -13,13 +13,14 @@
     font-weight: 400;
     font-style: normal;
 }
-body{
+
+body {
     background-color: var(--color-black);
     color: var(--color-white);
     position: relative;
 }
 
-header{
+header {
     /* background-color: var(--color-white); */
     text-align: start;
     display: flex;
@@ -27,7 +28,8 @@ header{
     align-items: center;
     padding: 10px 20px;
 }
-.image-container{
+
+.image-container {
     position: absolute;
     width: 100%;
     height: 100vh;
@@ -36,7 +38,8 @@ header{
     left: 0;
     z-index: -1;
 }
-.image-container img{
+
+.image-container img {
     position: absolute;
     top: 0;
     left: 0;
@@ -46,31 +49,36 @@ header{
     transition: opacity 0.5s ease-in-out;
 }
 
-.logo h1{
+.logo h1 {
     font-size: 4rem;
     font-weight: 900;
     color: var(--color-white);
 }
-.logo a{
+
+.logo a {
     text-decoration: none;
     font-weight: 900;
 }
-.red-text{
+
+.red-text {
     color: var(--color-orange);
 }
-.menu-profile{
+
+.menu-profile {
     height: 50px;
     display: flex;
     align-items: center;
     flex-direction: row;
     gap: 10px;
 }
-.menu-profile h2{
+
+.menu-profile h2 {
     color: var(--color-white);
     font-size: 1.125rem;
     padding-left: 20px;
 }
-.menu-profil__rond{
+
+.menu-profil__rond {
     width: 40px;
     height: 40px;
     border-radius: 50%;
@@ -79,13 +87,15 @@ header{
     align-items: center;
     justify-content: center;
 }
-.menu-profil__tete{
+
+.menu-profil__tete {
     width: 20px;
     height: 20px;
     background-color: var(--color-orange);
     border-radius: 50%;
 }
-.menu-profil__corps{
+
+.menu-profil__corps {
     width: 30px;
     height: 15px;
     background-color: var(--color-orange);
@@ -93,13 +103,13 @@ header{
     margin-top: 5px;
 }
 
-nav{
+nav {
     display: flex;
     gap: 20px;
     padding: 10px 20px;
 }
 
-nav button{
+nav button {
     background-color: transparent;
     border: none;
     color: var(--color-white);
@@ -109,7 +119,8 @@ nav button{
     transition: all 0.5s ease;
     border-radius: 5px;
 }
-nav button:hover{
+
+nav button:hover {
     background-color: var(--color-white);
     color: var(--color-black);
 }
@@ -134,3 +145,30 @@ nav button:hover{
     margin-left: 20px;
 }
 
+#contenu-dynamique {
+    margin: 20px;
+}
+
+.match-summary {
+    font-size: 1.4rem;
+    margin-bottom: 12px;
+}
+
+.match-detail {
+    width: 100%;
+    max-width: 720px;
+    border-collapse: collapse;
+    margin-top: 8px;
+}
+
+.match-detail th,
+.match-detail td {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 8px 12px;
+    text-align: left;
+}
+
+.match-detail th {
+    color: var(--color-orange);
+    font-weight: 700;
+}

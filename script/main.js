@@ -1,4 +1,4 @@
-import {orm} from "./orm.js";
+import { orm } from "./orm.js";
 import { POSTE, JOUEUR, EQUIPE, MANAGER, MATCH, MENU, pageACCUEIL, pageEQUIPE, pageMATCH, pageSTATS, STATS_MATCH } from "./class.js";
 
 
@@ -32,7 +32,7 @@ const init = async () => {
     });
 
 
-    const equipes = await orm.selectAll('EQUIPES'); 
+    const equipes = await orm.selectAll('EQUIPES');
     equipes.forEach(equipeData => {
         const joueurIds = JSON.parse(equipeData.joueurs);
         const listeJoueurs = joueurIds.map(id => MapJoueurs.get(parseInt(id)));
@@ -84,6 +84,15 @@ const getAllInfo = () => {
     return { manager, equipe };
 }
 
+const getOpponentEquipeId = (idEquipe) => {
+    for (const equipeId of MapEquipes.keys()) {
+        if (equipeId !== idEquipe) {
+            return equipeId;
+        }
+    }
+    return null;
+}
+
 const calculPuissanceJoueur = (id_joueur) => {
     const joueur = MapJoueurs.get(id_joueur);
     const puissance = (joueur.force + joueur.vitesse + joueur.endurance + joueur.technique) / 4;
@@ -95,7 +104,7 @@ const getEquipeStats = (id_equipe) => {
     // utiliser calculPuissanceJoueur pour chaque joueur de l'équipe
     let totalPuissance = 0;
     equipe.listeJoueurs.forEach(joueur => {
-        if (joueur.isBlesse) return; 
+        if (joueur.isBlesse) return;
         if (!joueur.isjoueurPrincipal) return;
         totalPuissance += calculPuissanceJoueur(joueur.id);
     });
@@ -116,9 +125,9 @@ const getMatchWinnerAndScore = (id_equipe1, id_equipe2) => {
     const scoreEquipe2 = (equipe2Stats.victoires / equipe2Stats.matchsJoues) * 0.6 + (equipe2Stats.puissanceMoyenne / 100) * 0.6 + Math.random() * 0.8;
 
     if (scoreEquipe1 > scoreEquipe2) {
-        return {"winner": id_equipe1 , "loser": id_equipe2, "winScore": Math.floor(scoreEquipe1*100), "LoseScore": Math.floor(scoreEquipe2*100)};
+        return { "winner": id_equipe1, "loser": id_equipe2, "winScore": Math.floor(scoreEquipe1 * 100), "LoseScore": Math.floor(scoreEquipe2 * 100) };
     } else {
-        return {"winner": id_equipe2 , "loser": id_equipe1, "winScore": Math.floor(scoreEquipe2*100), "LoseScore": Math.floor(scoreEquipe1*100)};
+        return { "winner": id_equipe2, "loser": id_equipe1, "winScore": Math.floor(scoreEquipe2 * 100), "LoseScore": Math.floor(scoreEquipe1 * 100) };
     }
 }
 
@@ -139,8 +148,8 @@ const scoring = (id_equipe, points) => {
     const equipe = MapEquipes.get(id_equipe);
     // établir les règles du basket 
     const listePointsPossibles = [1, 2, 3];
-    const listeProbabilites = [0.08, 0.75, 0.07]; 
-    
+    const listeProbabilites = [0.08, 0.75, 0.07];
+
     let pointsRestants = points;
     const scoreDetails = {
         "1_point": 0,
@@ -195,14 +204,14 @@ const startMatch = async (id_equipe1, id_equipe2) => {
 }
 
 const afficherHistoriqueMatchs = () => {
-    const { equipe } = getAllInfo(); 
-    const tousLesMatchs = Array.from(mapMatches.values()); 
-    
+    const { equipe } = getAllInfo();
+    const tousLesMatchs = Array.from(mapMatches.values());
+
     const pageStatsDynamique = new STATS_MATCH(tousLesMatchs, equipe.nom);
-    
+
     currentMenu.changerPage(pageStatsDynamique);
-    
+
     console.log("Nouvelle page créée :", currentMenu.pageActuelle);
 }
 
-export { init, getAllInfo, calculPuissanceJoueur, getEquipeStats, startMatch, currentMenu, pageACCUEIL, pageEQUIPE, pageMATCH, pageSTATS, mapMatches };
+export { init, getAllInfo, getOpponentEquipeId, calculPuissanceJoueur, getEquipeStats, startMatch, currentMenu, pageACCUEIL, pageEQUIPE, pageMATCH, pageSTATS, STATS_MATCH, mapMatches };
