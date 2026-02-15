@@ -145,8 +145,23 @@ function renderPageContent(page) {
     if (!container) return;
 
     container.innerHTML = "";
+    container.classList.remove("page-overlay");
 
     if (Array.isArray(page?.listeJoueurs) && !page?.readOnly) {
+        container.classList.add("page-overlay");
+        const overlay = document.createElement("div");
+        overlay.className = "team-overlay";
+
+        const panel = document.createElement("div");
+        panel.className = "team-overlay__panel";
+        panel.innerHTML = `
+            <div class="team-overlay__header">
+                <span class="team-overlay__kicker">Gestion</span>
+                <h3 class="team-overlay__title">${page.titre}</h3>
+                <p class="team-overlay__desc">${page.description}</p>
+            </div>
+        `;
+
         const table = document.createElement("table");
         table.className = "player-list";
         table.innerHTML = `<thead>
@@ -188,7 +203,12 @@ function renderPageContent(page) {
         });
 
         table.appendChild(tbody);
-        container.appendChild(table);
+        const tableScroll = document.createElement("div");
+        tableScroll.className = "table-scroll table-scroll--players";
+        tableScroll.appendChild(table);
+        panel.appendChild(tableScroll);
+        overlay.appendChild(panel);
+        container.appendChild(overlay);
 
         const updateJoueurRow = (joueurId) => {
             const joueur = MapJoueurs.get(joueurId);
@@ -249,6 +269,7 @@ function renderPageContent(page) {
     if (page?.equipe) {
         const equipe = page.equipe;
         const stats = page.stats;
+        const isGestionEquipe = !page.readOnly && page.nomPage === "Gestion de l'Équipe";
 
         const statsCard = document.createElement("div");
         statsCard.className = "team-stats-card";
@@ -270,7 +291,30 @@ function renderPageContent(page) {
                 <span class="stat-value">${Math.round(stats.puissanceMoyenne)}</span>
             </div>
         `;
-        container.appendChild(statsCard);
+        if (isGestionEquipe) {
+            container.classList.add("page-overlay");
+            const overlay = document.createElement("div");
+            overlay.className = "team-overlay";
+
+            const panel = document.createElement("div");
+            panel.className = "team-overlay__panel";
+            panel.innerHTML = `
+                <div class="team-overlay__header">
+                    <span class="team-overlay__kicker">Gestion</span>
+                    <h3 class="team-overlay__title">${page.titre}</h3>
+                    <p class="team-overlay__desc">${page.description}</p>
+                </div>
+            `;
+
+            panel.appendChild(statsCard);
+            overlay.appendChild(panel);
+            container.appendChild(overlay);
+        } else {
+            const panel = document.createElement("div");
+            panel.className = "team-panel";
+            panel.appendChild(statsCard);
+            container.appendChild(panel);
+        }
 
         // Ne montrer la section de modification du nom que pour GESTION_EQUIPE (pas readOnly)
         if (!page.readOnly) {
@@ -283,7 +327,12 @@ function renderPageContent(page) {
                     <button id="save-team-name">Sauvegarder</button>
                 </div>
             `;
-            container.appendChild(nameSection);
+            const targetPanel = container.querySelector(".team-overlay__panel") || container.querySelector(".team-panel");
+            if (targetPanel) {
+                targetPanel.appendChild(nameSection);
+            } else {
+                container.appendChild(nameSection);
+            }
 
             container.querySelector("#save-team-name").addEventListener("click", async () => {
                 const input = container.querySelector("#team-name");
@@ -349,14 +398,32 @@ function renderPageContent(page) {
     }
 
     if (page?.match_result) {
+        container.classList.add("page-overlay");
+
+        const overlay = document.createElement("div");
+        overlay.className = "team-overlay";
+
+        const panel = document.createElement("div");
+        panel.className = "team-overlay__panel";
+        panel.innerHTML = `
+            <div class="team-overlay__header">
+                <span class="team-overlay__kicker">Match</span>
+                <h3 class="team-overlay__title">${page.titre}</h3>
+                <p class="team-overlay__desc">${page.description}</p>
+            </div>
+        `;
+
         const match = page.match_result;
         const winnerName = match.Winner?.nom || "Equipe inconnue";
         const loserName = match.Loser?.nom || "Equipe inconnue";
         const date = new Date(match.date).toLocaleDateString("fr-FR");
         const summary = document.createElement("div");
         summary.className = "match-summary";
-        summary.textContent = `${date} - ${winnerName} ${match.scoreWinner} : ${match.scoreLoser} ${loserName}`;
-        container.appendChild(summary);
+        summary.innerHTML = `
+            <span class="match-date">${date}</span>
+            <span class="match-score">${winnerName} ${match.scoreWinner} : ${match.scoreLoser} ${loserName}</span>
+        `;
+        panel.appendChild(summary);
 
         const detailTable = document.createElement("table");
         detailTable.className = "match-detail";
@@ -372,13 +439,35 @@ function renderPageContent(page) {
         });
 
         detailTable.appendChild(tbody);
-        container.appendChild(detailTable);
+        panel.appendChild(detailTable);
+        overlay.appendChild(panel);
+        container.appendChild(overlay);
         return;
     }
 
     if (Array.isArray(page?.resultatsEntrainement)) {
+        container.classList.add("page-overlay");
+
+        const overlay = document.createElement("div");
+        overlay.className = "team-overlay";
+
+        const panel = document.createElement("div");
+        panel.className = "team-overlay__panel";
+        panel.innerHTML = `
+            <div class="team-overlay__header">
+                <span class="team-overlay__kicker">Entraînement</span>
+                <h3 class="team-overlay__title">${page.titre}</h3>
+                <p class="team-overlay__desc">${page.description}</p>
+            </div>
+        `;
+
         if (page.resultatsEntrainement.length === 0) {
-            container.textContent = "Aucun joueur disponible pour l'entraînement.";
+            const empty = document.createElement("div");
+            empty.className = "training-empty";
+            empty.textContent = "Aucun joueur disponible pour l'entraînement.";
+            panel.appendChild(empty);
+            overlay.appendChild(panel);
+            container.appendChild(overlay);
             return;
         }
 
@@ -415,15 +504,43 @@ function renderPageContent(page) {
         });
 
         table.appendChild(tbody);
-        container.appendChild(table);
+        const tableScroll = document.createElement("div");
+        tableScroll.className = "table-scroll table-scroll--training";
+        tableScroll.appendChild(table);
+        panel.appendChild(tableScroll);
+        overlay.appendChild(panel);
+        container.appendChild(overlay);
         return;
     }
 
     if (Array.isArray(page?.derniers_matchs)) {
+        container.classList.add("page-overlay");
+
+        const overlay = document.createElement("div");
+        overlay.className = "team-overlay";
+
+        const panel = document.createElement("div");
+        panel.className = "team-overlay__panel";
+        panel.innerHTML = `
+            <div class="team-overlay__header">
+                <span class="team-overlay__kicker">Matchs</span>
+                <h3 class="team-overlay__title">${page.titre}</h3>
+                <p class="team-overlay__desc">${page.description}</p>
+            </div>
+        `;
+
         if (page.derniers_matchs.length === 0) {
-            container.textContent = "Aucun match a afficher.";
+            const empty = document.createElement("div");
+            empty.className = "training-empty";
+            empty.textContent = "Aucun match a afficher.";
+            panel.appendChild(empty);
+            overlay.appendChild(panel);
+            container.appendChild(overlay);
             return;
         }
+
+        const listWrap = document.createElement("div");
+        listWrap.className = "table-scroll";
 
         const list = document.createElement("ul");
         list.className = "match-history";
@@ -433,10 +550,16 @@ function renderPageContent(page) {
             const winnerName = match.Winner?.nom || "Equipe inconnue";
             const loserName = match.Loser?.nom || "Equipe inconnue";
             const date = new Date(match.date).toLocaleDateString("fr-FR");
-            item.textContent = `${date} - ${winnerName} ${match.scoreWinner} : ${match.scoreLoser} ${loserName}`;
+            item.innerHTML = `
+                <span class="match-history__date">${date}</span>
+                <span class="match-history__score">${winnerName} ${match.scoreWinner} : ${match.scoreLoser} ${loserName}</span>
+            `;
             list.appendChild(item);
         });
 
-        container.appendChild(list);
+        listWrap.appendChild(list);
+        panel.appendChild(listWrap);
+        overlay.appendChild(panel);
+        container.appendChild(overlay);
     }
 }
