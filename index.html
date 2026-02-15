@@ -5,13 +5,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>N-billet Touquet 26</title>
+    <!-- Charger la feuille de style principale -->
     <link rel="stylesheet" href="style.css">
+    <!-- Charger la police d'affichage -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
 </head>
 
 <body>
+    <!-- Afficher l'entete avec logo et profil -->
     <header>
         <div class="logo">
             <h1><a class="red-text">N</a>-billet <a class="red-text">Touquet</a>-26</h1>
@@ -25,20 +28,24 @@
             </div>
         </div>
     </header>
+    <!-- Afficher la navigation principale -->
     <nav class="menu">
         <button onclick="changer_page('page-accueil')">Touquet-26</button>
         <button onclick="changer_page('ma-team')">Ma team</button>
         <button onclick="changer_page('mes-matchs')">Mes matchs</button>
         <button onclick="changer_page('mes-stats')">Mes stats</button>
     </nav>
+    <!-- Afficher le titre et la description de la page -->
     <div class="text-center">
         <h2 id="titre_menu"><a class="red-text">Touquet</a>-26</h2>
         <p id="phrase">Gérer votre équipe, planifier des matchs et suivre vos statistiques tout en profitant de
             l'ambiance unique du Touquet-26 ! </p>
     </div>
 
+    <!-- Monter ici le contenu dynamique -->
     <div id="contenu-dynamique"></div>
 
+    <!-- Placer ici les boutons d'actions contextuels -->
     <div class="button-right">
     </div>
     <!-- <div class="matchs" id="action-match">
@@ -54,11 +61,14 @@
         <button onclick="voir_stats_globales()" class="Mes-stats-btn">Voir les stats globales</button>
     </div> -->
 
+    <!-- Afficher l'image de fond immersive -->
     <div class="image-container">
         <img id="image-current" src="img/basketball.webp" alt="Image du Touquet 26">
     </div>
 </body>
+<!-- Charger SQL.js pour la persistance locale -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
+<!-- Charger le script de l'interface -->
 <script type="module" src="script/ui.js"></script>
 
 </html>

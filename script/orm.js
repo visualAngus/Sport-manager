@@ -1,5 +1,6 @@
-// LE BUT DE CE SCRIPT EST DE CREER UN "ORM" TRES SIMPLE VOIR SPECIFIQUE A NOS BESOINS
+// Definir un ORM simple pour les besoins de l'application
 
+// Initialiser la base locale et inserer les donnees de depart
 async function init() {
   const managersJSON = {
     1: {
@@ -216,13 +217,13 @@ async function init() {
     },
   };
 
-  // changement du moteur sql
+  // Charger le moteur SQL.js
   const SQL = await initSqlJs({
     locateFile: (file) =>
       `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/${file}`,
   });
 
-  // 2. CHARGEMENT : Charger une base de données existante depuis le stockage local
+  // Charger une base existante depuis le stockage local
   let db = null;
   const savedData = localStorage.getItem("myDatabase");
   if (savedData) {
@@ -236,11 +237,11 @@ async function init() {
       "CREATE TABLE IF NOT EXISTS JOUEURS (id INTEGER PRIMARY KEY, nom TEXT, poste TEXT, isJoueurPrincipal BOOLEAN, isBlesse BOOLEAN, points INTEGER, passes INTEGER, interceptions INTEGER, contres INTEGER, force INTEGER, endurance INTEGER, technique INTEGER, vitesse INTEGER);",
     );
 
-    // générateur de stats aléatoires autour de 70, borné entre 0 et 100
+    // Generer des stats aleatoires autour de 70, bornees entre 0 et 100
     const randomStat = () =>
       Math.min(100, Math.max(0, Math.round(70 + (Math.random() * 60 - 30))));
 
-    // Insérer les données des joueurs
+    // Inserer les donnees des joueurs
     const insertStmt = db.prepare(
       "INSERT INTO JOUEURS (id, nom, poste, isJoueurPrincipal, isBlesse, points, passes, interceptions, contres, force, endurance, technique, vitesse) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
     );
@@ -267,7 +268,7 @@ async function init() {
     db.run(
       "CREATE TABLE IF NOT EXISTS EQUIPES (id INTEGER PRIMARY KEY, nom TEXT, manager TEXT, matchsJoues INTEGER, victoires INTEGER, defaites INTEGER,joueurs TEXT);",
     );
-    // Insérer les données des équipes
+    // Inserer les donnees des equipes
     const insertEquipeStmt = db.prepare(
       "INSERT INTO EQUIPES (id, nom, manager, matchsJoues, victoires, defaites,joueurs) VALUES (?, ?, ?, ?, ?, ?, ?);",
     );
@@ -288,7 +289,7 @@ async function init() {
     db.run(
       "CREATE TABLE IF NOT EXISTS MANAGERS (id INTEGER PRIMARY KEY, nom TEXT, prenom TEXT, id_equipe INTEGER, victoires INTEGER, defaites INTEGER);",
     );
-    // Insérer les données des managers
+    // Inserer les donnees des managers
     const insertManagerStmt = db.prepare(
       "INSERT INTO MANAGERS (id, nom, prenom, id_equipe, victoires, defaites) VALUES (?, ?, ?, ?, ?, ?);",
     );
@@ -313,22 +314,26 @@ async function init() {
   return db;
 }
 
+// Persister la base dans le stockage local
 async function saveDatabase(db) {
   const binaryArray = db.export();
   localStorage.setItem("myDatabase", JSON.stringify(Array.from(binaryArray)));
   console.log("Base de données sauvegardée dans le stockage local");
 }
 
+// Definir les operations CRUD minimales
 class ORM {
   constructor(db) {
     this.db = db;
   }
+  // Sauvegarder l'etat courant de la base
   saveDatabase() {
     const binaryArray = this.db.export();
     localStorage.setItem("myDatabase", JSON.stringify(Array.from(binaryArray)));
     console.log("Base de données sauvegardée dans le stockage local");
   }
 
+  // Recuperer toutes les lignes d'une table
   selectAll(table) {
     const stmt = this.db.prepare(`SELECT * FROM ${table};`);
     const results = [];
@@ -339,6 +344,7 @@ class ORM {
     return results;
   }
 
+  // Recuperer une ligne par identifiant
   selectById(table, id) {
     const stmt = this.db.prepare(`SELECT * FROM ${table} WHERE id = ?;`);
     stmt.bind([id]);
@@ -350,6 +356,7 @@ class ORM {
     return result;
   }
 
+  // Recuperer une selection par clause WHERE
   selectByWhere(table, whereClause, params) {
     const stmt = this.db.prepare(
       `SELECT * FROM ${table} WHERE ${whereClause};`,
@@ -363,6 +370,7 @@ class ORM {
     return results;
   }
 
+  // Inserer une nouvelle ligne
   insert(table, data) {
     const columns = Object.keys(data).join(", ");
     const placeholders = Object.keys(data)
@@ -377,6 +385,7 @@ class ORM {
     saveDatabase(this.db);
   }
 
+  // Mettre a jour des colonnes selon un filtre
   update(table, updates, whereClause, params) {
     const setClause = Object.keys(updates)
       .map((col) => `${col} = ?`)
@@ -391,6 +400,7 @@ class ORM {
   }
 }
 
+// Demarrer l'ORM avec la base locale
 const Global_DB = await init();
 await saveDatabase(Global_DB);
 

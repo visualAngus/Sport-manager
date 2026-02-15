@@ -1,5 +1,6 @@
 import { init, getAllInfo, getOpponentEquipeId, calculPuissanceJoueur, getEquipeStats, startMatch, changerPosteJoueur, toggleBlessure, toggleTitulaire, changerNomEquipe, lancerEntrainement, MapJoueurs, MapEquipes, currentMenu, pageACCUEIL, pageEQUIPE, pageMATCH, pageSTATS, STATS_MATCH, GESTION_JOUEURS, GESTION_EQUIPE, STATS_EQUIPEONLY, STATS_JOUEURS_ONLY, ENTRAINEMENT, mapMatches } from "./main.js";
 
+// Creer un bouton d'action contextuel
 function add_btn(id, text) {
     const btnElement = document.getElementsByClassName("button-right")[0];
     const newBtn = document.createElement("button");
@@ -10,6 +11,7 @@ function add_btn(id, text) {
     btnElement.appendChild(newBtn);
 }
 
+// Nettoyer les boutons d'action precedents
 function clear_btn() {
     const btnElement = document.getElementsByClassName("button-right")[0];
     while (btnElement.firstChild) {
@@ -17,6 +19,7 @@ function clear_btn() {
     }
 }
 
+// Router vers la page demande et rendre le contenu
 async function changer_page(pageOrEvent) {
     const pageId = typeof pageOrEvent === "string" ? pageOrEvent : pageOrEvent?.target?.id;
     // document.getElementById("action-team").style.display = "none";
@@ -133,13 +136,15 @@ async function changer_page(pageOrEvent) {
     }
 }
 
+// Exposer la navigation aux boutons HTML
 window.changer_page = changer_page;
 
-// Tu peux aussi manipuler le DOM directement ici
+// Initialiser l'interface au chargement du DOM
 document.addEventListener("DOMContentLoaded", () => {
     console.log("L'interface est prête");
 });
 
+// Rendre le contenu d'une page dans le conteneur dynamique
 function renderPageContent(page) {
     const container = document.getElementById("contenu-dynamique");
     if (!container) return;
@@ -147,6 +152,7 @@ function renderPageContent(page) {
     container.innerHTML = "";
     container.classList.remove("page-overlay");
 
+    // Afficher la gestion des joueurs en overlay
     if (Array.isArray(page?.listeJoueurs) && !page?.readOnly) {
         container.classList.add("page-overlay");
         const overlay = document.createElement("div");
@@ -266,6 +272,7 @@ function renderPageContent(page) {
         return;
     }
 
+    // Afficher les stats d'equipe et la gestion du nom
     if (page?.equipe) {
         const equipe = page.equipe;
         const stats = page.stats;
@@ -347,7 +354,7 @@ function renderPageContent(page) {
         return;
     }
 
-    // Rendu pour la page stats des joueurs (lecture seule)
+    // Afficher les stats des joueurs en lecture seule
     if (page?.readOnly && Array.isArray(page?.listeJoueurs)) {
         const table = document.createElement("table");
         table.className = "player-list";
@@ -397,6 +404,7 @@ function renderPageContent(page) {
         return;
     }
 
+    // Afficher le resultat d'un match
     if (page?.match_result) {
         container.classList.add("page-overlay");
 
@@ -445,6 +453,7 @@ function renderPageContent(page) {
         return;
     }
 
+    // Afficher les resultats d'entrainement
     if (Array.isArray(page?.resultatsEntrainement)) {
         container.classList.add("page-overlay");
 
@@ -513,6 +522,7 @@ function renderPageContent(page) {
         return;
     }
 
+    // Afficher l'historique des matchs
     if (Array.isArray(page?.derniers_matchs)) {
         container.classList.add("page-overlay");
 

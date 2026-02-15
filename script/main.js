@@ -2,6 +2,7 @@ import { orm } from "./orm.js";
 import { POSTE, JOUEUR, EQUIPE, MANAGER, MATCH, MENU, pageACCUEIL, pageEQUIPE, pageMATCH, pageSTATS, STATS_MATCH, GESTION_JOUEURS, GESTION_EQUIPE, STATS_EQUIPEONLY, STATS_JOUEURS_ONLY, ENTRAINEMENT } from "./class.js";
 
 
+// Centraliser les entites pour un acces rapide
 let MapJoueurs = new Map();
 let MapEquipes = new Map();
 let MapManagers = new Map();
@@ -10,6 +11,7 @@ let currentMenu = new MENU();
 const id_manager = 1;
 
 
+// Charger les donnees depuis la base locale
 const init = async () => {
     const joueurs = await orm.selectAll('JOUEURS');
     joueurs.forEach(joueurData => {
@@ -78,12 +80,14 @@ const init = async () => {
 await init();
 
 
+// Recuperer le manager et son equipe
 const getAllInfo = () => {
     const manager = MapManagers.get(id_manager);
     const equipe = MapEquipes.get(manager.idEquipe);
     return { manager, equipe };
 }
 
+// Trouver un adversaire pour un match
 const getOpponentEquipeId = (idEquipe) => {
     for (const equipeId of MapEquipes.keys()) {
         if (equipeId !== idEquipe) {
@@ -93,12 +97,14 @@ const getOpponentEquipeId = (idEquipe) => {
     return null;
 }
 
+// Calculer la puissance moyenne d'un joueur
 const calculPuissanceJoueur = (id_joueur) => {
     const joueur = MapJoueurs.get(id_joueur);
     const puissance = (joueur.force + joueur.vitesse + joueur.endurance + joueur.technique) / 4;
     return puissance;
 }
 
+// Calculer les statistiques globales d'une equipe
 const getEquipeStats = (id_equipe) => {
     const equipe = MapEquipes.get(id_equipe);
     // utiliser calculPuissanceJoueur pour chaque joueur de l'équipe
@@ -116,6 +122,7 @@ const getEquipeStats = (id_equipe) => {
     };
 }
 
+// Determiner le vainqueur et les scores d'un match
 const getMatchWinnerAndScore = (id_equipe1, id_equipe2) => {
     // grace au statistiques et a des valeurs aléatoires, déterminer le gagnant
     const equipe1Stats = getEquipeStats(id_equipe1);
@@ -131,6 +138,7 @@ const getMatchWinnerAndScore = (id_equipe1, id_equipe2) => {
     }
 }
 
+// Tirer une valeur selon une distribution ponderee
 function tiragePondere(valeurs, probas) {
     const r = Math.random();
     let cumul = 0;
@@ -144,6 +152,7 @@ function tiragePondere(valeurs, probas) {
 }
 
 
+// Generer un detail de score par type de panier
 const scoring = (id_equipe, points) => {
     const equipe = MapEquipes.get(id_equipe);
     // établir les règles du basket 
@@ -170,6 +179,7 @@ const scoring = (id_equipe, points) => {
     return scoreDetails;
 }
 
+// Simuler un match et persister le resultat
 const startMatch = async (id_equipe1, id_equipe2) => {
     const matchResult = getMatchWinnerAndScore(id_equipe1, id_equipe2);
     const scoreEquipe1 = scoring(id_equipe1, matchResult.winScore);
@@ -203,6 +213,7 @@ const startMatch = async (id_equipe1, id_equipe2) => {
     return { match };
 }
 
+// Afficher l'historique des matchs en page stats
 const afficherHistoriqueMatchs = () => {
     const { equipe } = getAllInfo();
     const tousLesMatchs = Array.from(mapMatches.values());
@@ -214,6 +225,7 @@ const afficherHistoriqueMatchs = () => {
     console.log("Nouvelle page créée :", currentMenu.pageActuelle);
 }
 
+// Mettre a jour le poste d'un joueur
 const changerPosteJoueur = async (id_joueur, nouveauPoste) => {
     const joueur = MapJoueurs.get(id_joueur);
     if (!joueur) throw new Error("Joueur non trouvé");
@@ -223,6 +235,7 @@ const changerPosteJoueur = async (id_joueur, nouveauPoste) => {
     await orm.update('JOUEURS', { poste: nouveauPoste }, 'id = ?', [id_joueur]);
 }
 
+// Basculer l'etat de blessure d'un joueur
 const toggleBlessure = async (id_joueur) => {
     const joueur = MapJoueurs.get(id_joueur);
     if (!joueur) throw new Error("Joueur non trouvé");
@@ -232,6 +245,7 @@ const toggleBlessure = async (id_joueur) => {
     await orm.update('JOUEURS', { isBlesse: joueur.isBlesse ? 1 : 0 }, 'id = ?', [id_joueur]);
 }
 
+// Basculer le statut titulaire/remplacant
 const toggleTitulaire = async (id_joueur) => {
     const joueur = MapJoueurs.get(id_joueur);
     if (!joueur) throw new Error("Joueur non trouvé");
@@ -241,6 +255,7 @@ const toggleTitulaire = async (id_joueur) => {
     await orm.update('JOUEURS', { isjoueurPrincipal: joueur.isjoueurPrincipal ? 1 : 0 }, 'id = ?', [id_joueur]);
 }
 
+// Renommer l'equipe du manager
 const changerNomEquipe = async (id_equipe, nouveauNom) => {
     const equipe = MapEquipes.get(id_equipe);
     if (!equipe) throw new Error("Équipe non trouvée");
@@ -250,6 +265,7 @@ const changerNomEquipe = async (id_equipe, nouveauNom) => {
     await orm.update('EQUIPES', { nom: nouveauNom }, 'id = ?', [id_equipe]);
 }
 
+// Lancer un entrainement et mettre a jour les stats
 const lancerEntrainement = async (id_equipe) => {
     const equipe = MapEquipes.get(id_equipe);
     if (!equipe) throw new Error("Équipe non trouvée");

@@ -1,3 +1,4 @@
+/* Definir la palette globale */
 :root {
     --color-white: #ffffff;
     --color-black: #000000;
@@ -5,6 +6,7 @@
     --color-orange: #e84c13;
 }
 
+/* Normaliser le rendu global */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -14,12 +16,14 @@
     font-style: normal;
 }
 
+/* Poser le fond et la couleur par defaut */
 body {
     background-color: var(--color-black);
     color: var(--color-white);
     position: relative;
 }
 
+/* Aligner l'entete principal */
 header {
     /* background-color: var(--color-white); */
     text-align: start;
@@ -29,6 +33,7 @@ header {
     padding: 10px 20px;
 }
 
+/* Positionner l'image de fond pleine page */
 .image-container {
     position: absolute;
     width: 100%;
@@ -39,6 +44,7 @@ header {
     z-index: -1;
 }
 
+/* Ajuster l'image sans deformation */
 .image-container img {
     position: absolute;
     top: 0;
@@ -49,6 +55,7 @@ header {
     transition: opacity 0.5s ease-in-out;
 }
 
+/* Mettre en avant le logo */
 .logo h1 {
     font-size: 4rem;
     font-weight: 900;
@@ -64,6 +71,7 @@ header {
     color: var(--color-orange);
 }
 
+/* Aligner le bloc profil */
 .menu-profile {
     height: 50px;
     display: flex;
@@ -103,12 +111,14 @@ header {
     margin-top: 5px;
 }
 
+/* Structurer la navigation */
 nav {
     display: flex;
     gap: 20px;
     padding: 10px 20px;
 }
 
+/* Styler les boutons de menu */
 nav button {
     background-color: transparent;
     border: none;
@@ -141,6 +151,7 @@ nav button:hover {
     margin-left: 20px;
 }
 
+/* Aligner les actions contextuelles */
 .button-right {
     margin-left: 20px;
     display: flex;
@@ -149,6 +160,7 @@ nav button:hover {
     align-items: center;
 }
 
+/* Styliser les boutons d'actions */
 .Ma-team-btn {
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 14px;
@@ -170,18 +182,21 @@ nav button:hover {
     transform: translateY(0);
 }
 
+/* Reserver l'espace pour les pages dynamiques */
 #contenu-dynamique {
     padding: 20px;
     position: relative;
     z-index: 1;
 }
 
+/* Contraindre les pages en overlay a la fenetre */
 #contenu-dynamique.page-overlay {
     height: calc(100vh - 300px);
     max-height: calc(100vh - 300px);
     overflow: hidden;
 }
 
+/* Centrer un panneau overlay */
 .team-overlay {
     position: relative;
     display: flex;
@@ -192,6 +207,7 @@ nav button:hover {
     padding: 12px;
 }
 
+/* Donner un effet vitre et un layout en colonne */
 .team-overlay__panel {
     width: min(960px, 96%);
     border-radius: 28px;
@@ -217,6 +233,7 @@ nav button:hover {
     pointer-events: none;
 }
 
+/* Mettre en valeur le titre d'overlay */
 .team-overlay__header {
     position: relative;
     z-index: 1;
@@ -242,6 +259,7 @@ nav button:hover {
     margin-top: 6px;
 }
 
+/* Presenter un panneau simple hors overlay */
 .team-panel {
     width: min(900px, 96%);
     margin: 0 auto;
@@ -251,6 +269,7 @@ nav button:hover {
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+/* Afficher les stats en grille */
 .team-stats-card {
     position: relative;
     z-index: 1;
@@ -281,6 +300,7 @@ nav button:hover {
     color: var(--color-white);
 }
 
+/* Styliser le tableau des joueurs */
 .player-list {
     width: 100%;
     border-collapse: collapse;
@@ -341,6 +361,7 @@ nav button:hover {
     font-size: 0.95rem;
 }
 
+/* Aligner les actions par joueur */
 .player-actions {
     display: flex;
     gap: 8px;
@@ -364,6 +385,7 @@ nav button:hover {
     box-shadow: 0 8px 16px rgba(232, 76, 19, 0.25);
 }
 
+/* Styliser le tableau des entrainements */
 .training-results {
     width: 100%;
     border-collapse: collapse;
@@ -373,6 +395,7 @@ nav button:hover {
     overflow: hidden;
 }
 
+/* Controler le scroll interne des listes */
 .table-scroll {
     flex: 1 1 auto;
     min-height: 0;
@@ -446,6 +469,7 @@ nav button:hover {
     background: rgba(255, 255, 255, 0.04);
 }
 
+/* Mettre en avant l'etat vide */
 .training-empty {
     padding: 20px;
     border-radius: 14px;
@@ -454,6 +478,7 @@ nav button:hover {
     color: rgba(255, 255, 255, 0.75);
 }
 
+/* Afficher les progressions en pastilles */
 .progressions-list {
     display: flex;
     flex-wrap: wrap;
@@ -472,6 +497,7 @@ nav button:hover {
     color: var(--color-orange);
 }
 
+/* Mettre en avant le resume de match */
 .match-summary {
     display: flex;
     flex-direction: column;
@@ -494,6 +520,7 @@ nav button:hover {
     color: var(--color-white);
 }
 
+/* Styliser le detail du score */
 .match-detail {
     width: 100%;
     border-collapse: collapse;
@@ -526,6 +553,7 @@ nav button:hover {
     background: rgba(255, 255, 255, 0.04);
 }
 
+/* Presenter l'historique en cartes */
 .match-history {
     list-style: none;
     margin: 0;
@@ -603,6 +631,7 @@ nav button:hover {
     box-shadow: 0 10px 20px rgba(232, 76, 19, 0.4);
 }
 
+/* Adapter l'overlay sur petits ecrans */
 @media (max-width: 720px) {
     .team-overlay__title {
         font-size: 2rem;

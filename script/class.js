@@ -1,3 +1,4 @@
+// Definir les postes possibles et leur validation
 class POSTE {
     constructor(poste) {
         this.liste_dispo_poste = [
@@ -23,6 +24,7 @@ class POSTE {
     }
 }
 
+// Definir un joueur et ses statistiques
 class JOUEUR {
     constructor(
         id,
@@ -59,6 +61,7 @@ class JOUEUR {
     }
 }
 
+// Definir une equipe et ses performances
 class EQUIPE {
     constructor(id, nom, listeJoueurs, manager, matchJoues, victoires) {
         this.id = id;
@@ -70,6 +73,7 @@ class EQUIPE {
     }
 }
 
+// Definir un manager et ses resultats
 class MANAGER {
     constructor(id, nom, prenom, idEquipe, victoires, defaites) {
         this.id = id;
@@ -81,6 +85,7 @@ class MANAGER {
     }
 }
 
+// Definir un match et son detail de score
 class MATCH {
     constructor(id, Winner, Loser, date, scoreLoser, scoreWinner, scoreDetail) {
         this.id = id;
@@ -93,6 +98,7 @@ class MATCH {
     }
 }
 
+// Construire la page des matchs recents
 class STATS_MATCH {
     constructor(liste_matchs_recents, nomMonEquipe) {
         const matchsEquipe = liste_matchs_recents.filter((match) =>
@@ -126,6 +132,7 @@ class STATS_MATCH {
     }
 }
 
+// Construire la page d'accueil
 class pageACCUEIL {
     constructor() {
         this.nomPage = "Page d'Accueil";
@@ -137,6 +144,7 @@ class pageACCUEIL {
     }
 }
 
+// Construire la page equipe et ses actions
 class pageEQUIPE {
     constructor() {
         this.nomPage = "Page d'Équipe";
@@ -152,6 +160,7 @@ class pageEQUIPE {
     }
 }
 
+// Construire la page des matchs
 class pageMATCH {
     constructor() {
         this.nomPage = "Page de Match";
@@ -166,6 +175,7 @@ class pageMATCH {
     }
 }
 
+// Construire la page des statistiques
 class pageSTATS {
     constructor() {
         this.nomPage = "Page des Stats";
@@ -181,6 +191,7 @@ class pageSTATS {
     }
 }
 
+// Construire la page de gestion des joueurs
 class GESTION_JOUEURS {
     constructor(listeJoueurs) {
         this.nomPage = "Gestion des Joueurs";
@@ -192,6 +203,7 @@ class GESTION_JOUEURS {
     }
 }
 
+// Construire la page de gestion d'equipe
 class GESTION_EQUIPE {
     constructor(equipe, stats) {
         this.nomPage = "Gestion de l'Équipe";
@@ -204,6 +216,7 @@ class GESTION_EQUIPE {
     }
 }
 
+// Construire la page des resultats d'entrainement
 class ENTRAINEMENT {
     constructor(resultatsEntrainement) {
         this.nomPage = "Entraînement";
@@ -218,6 +231,7 @@ class ENTRAINEMENT {
     }
 }
 
+// Construire la page stats equipe en lecture seule
 class STATS_EQUIPEONLY {
     constructor(equipe, stats) {
         this.nomPage = "Statistiques de l'Équipe";
@@ -231,6 +245,7 @@ class STATS_EQUIPEONLY {
     }
 }
 
+// Construire la page stats joueurs en lecture seule
 class STATS_JOUEURS_ONLY {
     constructor(listeJoueurs) {
         this.nomPage = "Statistiques des Joueurs";
@@ -243,6 +258,7 @@ class STATS_JOUEURS_ONLY {
     }
 }
 
+// Gerer la navigation entre les pages
 class MENU {
     constructor() {
         this.pageActuelle = new pageACCUEIL();
