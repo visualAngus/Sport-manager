@@ -135,6 +135,11 @@ nav button:hover {
     color: var(--color-black);
 }
 
+.text-center{
+    margin-top: 50px;
+    font-size: 1.5rem;
+}
+
 #titre_menu {
     margin-left: 20px;
 }
@@ -167,7 +172,7 @@ nav button:hover {
     padding: 12px 18px;
     background: linear-gradient(140deg, rgba(10, 10, 10, 0.7), rgba(30, 30, 30, 0.55));
     color: var(--color-white);
-    font-size: 1.05rem;
+    font-size: 1.2rem;
     cursor: pointer;
     transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
@@ -191,8 +196,8 @@ nav button:hover {
 
 /* Contraindre les pages en overlay a la fenetre */
 #contenu-dynamique.page-overlay {
-    height: calc(100vh - 300px);
-    max-height: calc(100vh - 300px);
+    height: calc(100vh - 400px);
+    max-height: calc(100vh - 400px);
     overflow: hidden;
 }
 
@@ -318,12 +323,7 @@ nav button:hover {
     table-layout: fixed;
 }
 
-.player-list thead {
-    position: sticky;
-    top: 0;
-    z-index: 1;
-    background-clip: padding-box;
-}
+
 
 .player-list tbody {
     display: block;
@@ -645,4 +645,9 @@ nav button:hover {
     .team-panel {
         padding: 20px;
     }
+}
+
+.menu button.selected {
+    background-color: var(--color-white);
+    color: var(--color-black);
 }

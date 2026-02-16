@@ -1,4 +1,5 @@
 import { init, getAllInfo, getOpponentEquipeId, calculPuissanceJoueur, getEquipeStats, startMatch, changerPosteJoueur, toggleBlessure, toggleTitulaire, changerNomEquipe, lancerEntrainement, MapJoueurs, MapEquipes, currentMenu, pageACCUEIL, pageEQUIPE, pageMATCH, pageSTATS, STATS_MATCH, GESTION_JOUEURS, GESTION_EQUIPE, STATS_EQUIPEONLY, STATS_JOUEURS_ONLY, ENTRAINEMENT, mapMatches,pageMatchResultats } from "./main.js";
+import { ORM } from "./orm.js";
 
 // Creer un bouton d'action contextuel
 function add_btn(id, text) {
@@ -21,7 +22,7 @@ function clear_btn() {
 
 // Router vers la page demande et rendre le contenu
 async function changer_page(pageOrEvent) {
-    const pageId = typeof pageOrEvent === "string" ? pageOrEvent : pageOrEvent?.target?.id;
+    let pageId = typeof pageOrEvent === "string" ? pageOrEvent : pageOrEvent?.target?.id;
     if (!pageId) {
         console.error("Aucun identifiant de page fourni");
         return;
@@ -32,14 +33,17 @@ async function changer_page(pageOrEvent) {
             break;
         case "page-equipe":
         case "ma-team":
+            pageId = "ma-team";
             currentMenu.changerPage(new pageEQUIPE());
             break;
         case "page-match":
         case "mes-matchs":
+            pageId = "mes-matchs";
             currentMenu.changerPage(new pageMATCH());
             break;
         case "page-stats":
         case "mes-stats":
+            pageId = "mes-stats";
             currentMenu.changerPage(new pageSTATS());
             break;
         case "planifier-match": {
@@ -87,6 +91,7 @@ async function changer_page(pageOrEvent) {
         }
         case "gerer-joueurs": {
             const { equipe: equipeGestion } = getAllInfo();
+            console.log("Equipe pour gestion des joueurs :", equipeGestion);
             const pageGestionJoueurs = new GESTION_JOUEURS(equipeGestion.listeJoueurs);
             currentMenu.changerPage(pageGestionJoueurs);
             break;
@@ -113,6 +118,16 @@ async function changer_page(pageOrEvent) {
     }
     document.getElementById('titre_menu').innerHTML = currentMenu.pageActuelle.titre;
     document.getElementById('phrase').innerHTML = currentMenu.pageActuelle.description;
+    // mettre la classe selected sur le bouton actif enfant de .menu
+    const menuButtons = document.querySelectorAll(".menu button");
+    menuButtons.forEach((btn) => {
+        // console.log(`Comparing button id "${btn.id}" with pageId "${pageId}"`);
+        if (btn.id === pageId) {
+            btn.classList.add("selected");
+        } else {
+            btn.classList.remove("selected");
+        }
+    });
     renderPageContent(currentMenu.pageActuelle);
 
     clear_btn();
@@ -123,6 +138,7 @@ async function changer_page(pageOrEvent) {
 
 // Exposer la navigation aux boutons HTML
 window.changer_page = changer_page;
+changer_page("page-accueil");
 
 // Initialiser l'interface au chargement du DOM
 document.addEventListener("DOMContentLoaded", () => {
@@ -171,7 +187,7 @@ function renderPageContent(page) {
             row.dataset.joueurId = joueur.id;
             const puissance = Math.round(calculPuissanceJoueur(joueur.id));
             const statut = joueur.isBlesse ? "Blessé" : (joueur.isjoueurPrincipal ? "Titulaire" : "Remplacant");
-
+            console.log(`Rendu du joueur`,joueur);
             row.innerHTML = `
                 <td>${joueur.nom}</td>
                 <td>
@@ -186,7 +202,6 @@ function renderPageContent(page) {
                 <td>${statut}</td>
                 <td>${puissance}</td>
                 <td class="player-actions">
-                    <button data-joueur-id="${joueur.id}" data-action="toggle-blessure">${joueur.isBlesse ? "Guérir" : "Blesser"}</button>
                     <button data-joueur-id="${joueur.id}" data-action="toggle-titulaire">${joueur.isjoueurPrincipal ? "Remplacant" : "Titulaire"}</button>
                 </td>
             `;
@@ -223,7 +238,6 @@ function renderPageContent(page) {
                 <td>${statut}</td>
                 <td>${puissance}</td>
                 <td class="player-actions">
-                    <button data-joueur-id="${joueur.id}" data-action="toggle-blessure">${joueur.isBlesse ? "Guérir" : "Blesser"}</button>
                     <button data-joueur-id="${joueur.id}" data-action="toggle-titulaire">${joueur.isjoueurPrincipal ? "Remplaçant" : "Titulaire"}</button>
                 </td>
             `;

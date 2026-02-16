@@ -140,6 +140,9 @@ class pageACCUEIL {
         this.description = "Bienvenu dans le gestionnaire de sport ultime.";
         this.url_image = "img/basketball.webp";
         this.list_btn = [
+            { id: "page-equipe", text: "Ma page d'équipe" },
+            { id: "page-match", text: "Mes matchs" },
+            { id: "page-stats", text: "Mes statistiques" },
         ];
     }
 }

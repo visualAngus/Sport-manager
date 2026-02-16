@@ -48,7 +48,6 @@ const init = async () => {
         );
         MapEquipes.set(equipe.id, equipe);
     });
-
     const managers = await orm.selectAll('MANAGERS');
     managers.forEach(managerData => {
         const manager = new MANAGER(

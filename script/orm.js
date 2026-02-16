@@ -234,7 +234,7 @@ async function init() {
     db = new SQL.Database();
     console.log("Nouvelle base de données créée");
     db.run(
-      "CREATE TABLE IF NOT EXISTS JOUEURS (id INTEGER PRIMARY KEY, nom TEXT, poste TEXT, isJoueurPrincipal BOOLEAN, isBlesse BOOLEAN, points INTEGER, passes INTEGER, interceptions INTEGER, contres INTEGER, force INTEGER, endurance INTEGER, technique INTEGER, vitesse INTEGER);",
+      "CREATE TABLE IF NOT EXISTS JOUEURS (id INTEGER PRIMARY KEY, nom TEXT, poste TEXT, isjoueurPrincipal BOOLEAN, isBlesse BOOLEAN, points INTEGER, passes INTEGER, interceptions INTEGER, contres INTEGER, force INTEGER, endurance INTEGER, technique INTEGER, vitesse INTEGER);",
     );
 
     // Generer des stats aleatoires autour de 70, bornees entre 0 et 100
@@ -243,7 +243,7 @@ async function init() {
 
     // Inserer les donnees des joueurs
     const insertStmt = db.prepare(
-      "INSERT INTO JOUEURS (id, nom, poste, isJoueurPrincipal, isBlesse, points, passes, interceptions, contres, force, endurance, technique, vitesse) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
+      "INSERT INTO JOUEURS (id, nom, poste, isjoueurPrincipal, isBlesse, points, passes, interceptions, contres, force, endurance, technique, vitesse) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
     );
     for (const [id, joueur] of Object.entries(joueursJSON)) {
       insertStmt.run([
