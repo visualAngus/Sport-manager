@@ -136,7 +136,7 @@ class STATS_MATCH {
 class pageACCUEIL {
     constructor() {
         this.nomPage = "Page d'Accueil";
-        this.titre = "N-billet Touquet-26";
+        this.titre = "<a class='red-text'>N</a>-billet <a class='red-text'>Touquet</a>-26";
         this.description = "Bienvenu dans le gestionnaire de sport ultime.";
         this.url_image = "img/basketball.webp";
         this.list_btn = [
@@ -148,7 +148,7 @@ class pageACCUEIL {
 class pageEQUIPE {
     constructor() {
         this.nomPage = "Page d'Équipe";
-        this.titre = "Votre Équipe";
+        this.titre = "<a class='red-text'>Votre </a> Équipe";
         this.description =
             "Consultez les statistiques de vos joueurs et apportez des modifications.";
         this.url_image = "img/equipe.png";
@@ -164,7 +164,7 @@ class pageEQUIPE {
 class pageMATCH {
     constructor() {
         this.nomPage = "Page de Match";
-        this.titre = "Matchs";
+        this.titre = "<a class='red-text'> Mes </a> matchs";
         this.description =
             "Préparez-vous pour les prochains affrontements de votre équipe.";
         this.url_image = "img/score.png";
@@ -179,7 +179,7 @@ class pageMATCH {
 class pageSTATS {
     constructor() {
         this.nomPage = "Page des Stats";
-        this.titre = "Statistiques";
+        this.titre = "<a class='red-text'>Mes </a> statistiques";
         this.description =
             "Analysez les performances de votre équipe et de vos joueurs.";
         this.url_image = "img/trophes.png";
@@ -258,6 +258,20 @@ class STATS_JOUEURS_ONLY {
     }
 }
 
+class pageMatchResultats {
+    constructor(match) {
+        this.nomPage = "Résultats du Match";
+        this.titre = "Resultat du match";
+        this.description = `Match entre ${match.Winner?.nom || "Inconnu"} et ${match.Loser?.nom || "Inconnu"}`;
+        this.url_image = "img/score.png";
+        this.list_btn = [
+                    { id: "resultats-matchs", text: "Historique des matchs" },
+                    { id: "page-match", text: "Retour aux matchs" },
+                ];
+        this.match_result = match;
+    }
+}
+
 // Gerer la navigation entre les pages
 class MENU {
     constructor() {
@@ -301,4 +315,5 @@ export {
     pageEQUIPE,
     pageMATCH,
     pageSTATS,
+    pageMatchResultats
 };

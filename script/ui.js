@@ -1,4 +1,4 @@
-import { init, getAllInfo, getOpponentEquipeId, calculPuissanceJoueur, getEquipeStats, startMatch, changerPosteJoueur, toggleBlessure, toggleTitulaire, changerNomEquipe, lancerEntrainement, MapJoueurs, MapEquipes, currentMenu, pageACCUEIL, pageEQUIPE, pageMATCH, pageSTATS, STATS_MATCH, GESTION_JOUEURS, GESTION_EQUIPE, STATS_EQUIPEONLY, STATS_JOUEURS_ONLY, ENTRAINEMENT, mapMatches } from "./main.js";
+import { init, getAllInfo, getOpponentEquipeId, calculPuissanceJoueur, getEquipeStats, startMatch, changerPosteJoueur, toggleBlessure, toggleTitulaire, changerNomEquipe, lancerEntrainement, MapJoueurs, MapEquipes, currentMenu, pageACCUEIL, pageEQUIPE, pageMATCH, pageSTATS, STATS_MATCH, GESTION_JOUEURS, GESTION_EQUIPE, STATS_EQUIPEONLY, STATS_JOUEURS_ONLY, ENTRAINEMENT, mapMatches,pageMatchResultats } from "./main.js";
 
 // Creer un bouton d'action contextuel
 function add_btn(id, text) {
@@ -22,9 +22,6 @@ function clear_btn() {
 // Router vers la page demande et rendre le contenu
 async function changer_page(pageOrEvent) {
     const pageId = typeof pageOrEvent === "string" ? pageOrEvent : pageOrEvent?.target?.id;
-    // document.getElementById("action-team").style.display = "none";
-    // document.getElementById("action-match").style.display = "none";
-    // document.getElementById("action-stats").style.display = "none";
     if (!pageId) {
         console.error("Aucun identifiant de page fourni");
         return;
@@ -32,22 +29,18 @@ async function changer_page(pageOrEvent) {
     switch (pageId) {
         case "page-accueil":
             currentMenu.changerPage(new pageACCUEIL());
-            // document.getElementById("action-menu").style.display = "block";
             break;
         case "page-equipe":
         case "ma-team":
             currentMenu.changerPage(new pageEQUIPE());
-            // document.getElementById("action-team").style.display = "block";
             break;
         case "page-match":
         case "mes-matchs":
             currentMenu.changerPage(new pageMATCH());
-            // document.getElementById("action-match").style.display = "block";
             break;
         case "page-stats":
         case "mes-stats":
             currentMenu.changerPage(new pageSTATS());
-            // document.getElementById("action-stats").style.display = "block";
             break;
         case "planifier-match": {
             const { equipe } = getAllInfo();
@@ -57,19 +50,11 @@ async function changer_page(pageOrEvent) {
                 break;
             }
             const { match } = await startMatch(equipe.id, opponentId);
+
             const winnerName = match.Winner?.nom || "Equipe inconnue";
             const loserName = match.Loser?.nom || "Equipe inconnue";
-            const pageMatchResult = {
-                nomPage: "Resultat du match",
-                titre: "Resultat du match",
-                description: `${winnerName} ${match.scoreWinner} : ${match.scoreLoser} ${loserName}`,
-                list_btn: [
-                    { id: "resultats-matchs", text: "Historique des matchs" },
-                    { id: "page-match", text: "Retour aux matchs" },
-                ],
-                match_result: match,
-            };
-            currentMenu.changerPage(pageMatchResult);
+
+            currentMenu.changerPage(new pageMatchResultats(match));
             break;
         }
         case "resultats-matchs": {
@@ -126,8 +111,8 @@ async function changer_page(pageOrEvent) {
         default:
             console.error("Page non reconnue :", pageId);
     }
-    document.getElementById('titre_menu').innerText = currentMenu.pageActuelle.titre;
-    document.getElementById('phrase').innerText = currentMenu.pageActuelle.description;
+    document.getElementById('titre_menu').innerHTML = currentMenu.pageActuelle.titre;
+    document.getElementById('phrase').innerHTML = currentMenu.pageActuelle.description;
     renderPageContent(currentMenu.pageActuelle);
 
     clear_btn();
@@ -429,7 +414,7 @@ function renderPageContent(page) {
         summary.className = "match-summary";
         summary.innerHTML = `
             <span class="match-date">${date}</span>
-            <span class="match-score">${winnerName} ${match.scoreWinner} : ${match.scoreLoser} ${loserName}</span>
+            <span class="match-score">${winnerName} <a class="red-text">${match.scoreWinner}</a> : <a class="red-text">${match.scoreLoser}</a> ${loserName}</span>
         `;
         panel.appendChild(summary);
 
