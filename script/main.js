@@ -103,14 +103,30 @@ const calculPuissanceJoueur = (id_joueur) => {
     return puissance;
 }
 
+const isJoueurBlesseByProbabilite = (id_joueur) => {
+    const joueur = MapJoueurs.get(id_joueur);
+    const probabiliteBlessure = 0.05; // 5% de chance de se blesser à chaque match
+    return Math.random() < probabiliteBlessure;
+}
+
 // Calculer les statistiques globales d'une equipe
-const getEquipeStats = (id_equipe) => {
+const getEquipeStats = (id_equipe, isHomeTeam = false) => {
     const equipe = MapEquipes.get(id_equipe);
     // utiliser calculPuissanceJoueur pour chaque joueur de l'équipe
     let totalPuissance = 0;
     equipe.listeJoueurs.forEach(joueur => {
         if (joueur.isBlesse) return;
         if (!joueur.isjoueurPrincipal) return;
+
+        if (isJoueurBlesseByProbabilite(joueur.id)) {
+            joueur.isBlesse = true;
+            orm.update('JOUEURS', { isBlesse: 1 }, 'id = ?', [joueur.id]);
+            if (isHomeTeam) {
+                confirm("Mauvaise nouvelle ! " + joueur.nom + " s'est blessé pendant le match et ne pourra pas jouer les prochains matchs.");
+            }
+            return;
+        }
+
         totalPuissance += calculPuissanceJoueur(joueur.id);
     });
     const puissanceMoyenne = totalPuissance / equipe.listeJoueurs.length;
@@ -124,8 +140,8 @@ const getEquipeStats = (id_equipe) => {
 // Determiner le vainqueur et les scores d'un match
 const getMatchWinnerAndScore = (id_equipe1, id_equipe2) => {
     // grace au statistiques et a des valeurs aléatoires, déterminer le gagnant
-    const equipe1Stats = getEquipeStats(id_equipe1);
-    const equipe2Stats = getEquipeStats(id_equipe2);
+    const equipe1Stats = getEquipeStats(id_equipe1, true);
+    const equipe2Stats = getEquipeStats(id_equipe2, false);
 
     const scoreEquipe1 = (equipe1Stats.victoires / equipe1Stats.matchsJoues) * 0.6 + (equipe1Stats.puissanceMoyenne / 100) * 0.6 + Math.random() * 0.8;
     const scoreEquipe2 = (equipe2Stats.victoires / equipe2Stats.matchsJoues) * 0.6 + (equipe2Stats.puissanceMoyenne / 100) * 0.6 + Math.random() * 0.8;

@@ -201,7 +201,7 @@ class GESTION_JOUEURS {
         this.titre = "Gérer mes joueurs";
         this.description = "Modifier les postes, statuts et titularisations.";
         this.url_image = "img/equipe.png";
-        this.list_btn = [{ id: "page-equipe", text: "Retour" }];
+        this.list_btn = [{ id: "page-equipe", text: "Retour" },{ id: "ajouter-joueur", text: "Ajouter un joueur" }];
         this.listeJoueurs = listeJoueurs;
     }
 }
