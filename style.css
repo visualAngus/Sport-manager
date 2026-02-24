@@ -80,6 +80,10 @@ header {
     gap: 10px;
 }
 
+#nom_manager {
+    font-size: 1.525rem;
+}
+
 .menu-profile h2 {
     color: var(--color-white);
     font-size: 1.125rem;

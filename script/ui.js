@@ -143,7 +143,16 @@ changer_page("page-accueil");
 // Initialiser l'interface au chargement du DOM
 document.addEventListener("DOMContentLoaded", () => {
     console.log("L'interface est prête");
+
+    // changer le nom du manager
 });
+const { manager } = getAllInfo();
+if (manager) {
+    const managerNameElement = document.getElementById("nom_manager");
+    if (managerNameElement) {
+        managerNameElement.textContent = `${manager.nom} ${manager.prenom}`; 
+    }
+}
 
 // Rendre le contenu d'une page dans le conteneur dynamique
 function renderPageContent(page) {
