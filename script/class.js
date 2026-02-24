@@ -110,7 +110,7 @@ class STATS_MATCH {
 
         this.liste_matchs_recents = matchsTries;
         this.nomPage = "Détails des Matchs";
-        this.titre = "Historique des Matchs";
+        this.titre = "<a class='red-text'>Historique</a> des Matchs";
         this.derniers_matchs = matchsTries.slice(-10);
         this.description = this.calculerBilan(nomMonEquipe);
         this.url_image = "img/score.png";
@@ -137,7 +137,7 @@ class pageACCUEIL {
     constructor() {
         this.nomPage = "Page d'Accueil";
         this.titre = "<a class='red-text'>N</a>-billet <a class='red-text'>Touquet</a>-26";
-        this.description = "Bienvenu dans le gestionnaire de sport ultime.";
+        this.description = "<a>Bienvenu dans le <a class='red-text'>gestionnaire de sport ultime.</a>";
         this.url_image = "img/basketball.webp";
         this.list_btn = [
             { id: "page-equipe", text: "Ma page d'équipe" },
@@ -210,7 +210,7 @@ class pageAJOUTERJOUEUR {
 class GESTION_JOUEURS {
     constructor(listeJoueurs) {
         this.nomPage = "Gestion des Joueurs";
-        this.titre = "Gérer mes joueurs";
+        this.titre = "<a class='red-text'>Gérer</a> mes joueurs";
         this.description = "Modifier les postes, statuts et titularisations.";
         this.url_image = "img/equipe.png";
         this.list_btn = [{ id: "page-equipe", text: "Retour" },{ id: "ajouter-joueur", text: "Ajouter un joueur" }];
@@ -222,7 +222,7 @@ class GESTION_JOUEURS {
 class GESTION_EQUIPE {
     constructor(equipe, stats) {
         this.nomPage = "Gestion de l'Équipe";
-        this.titre = "Gérer mon équipe";
+        this.titre = "<a class='red-text'>Gérer</a> mon équipe";
         this.description = "Modifier le nom et consulter les statistiques.";
         this.url_image = "img/equipe.png";
         this.list_btn = [{ id: "page-equipe", text: "Retour" }];
@@ -235,7 +235,7 @@ class GESTION_EQUIPE {
 class ENTRAINEMENT {
     constructor(resultatsEntrainement) {
         this.nomPage = "Entraînement";
-        this.titre = "Résultats de l'entraînement";
+        this.titre = "<a class='red-text'>Résultats</a> de l'entraînement";
         this.description = "Vos joueurs se sont entraînés et ont progressé !";
         this.url_image = "img/equipe.png";
         this.list_btn = [
@@ -250,7 +250,7 @@ class ENTRAINEMENT {
 class STATS_EQUIPEONLY {
     constructor(equipe, stats) {
         this.nomPage = "Statistiques de l'Équipe";
-        this.titre = "Statistiques de mon équipe";
+        this.titre = "<a class='red-text'>Statistiques</a> de mon équipe";
         this.description = "Consultez les performances de votre équipe.";
         this.url_image = "img/equipe.png";
         this.list_btn = [{ id: "page-stats", text: "Retour" }];
@@ -264,7 +264,7 @@ class STATS_EQUIPEONLY {
 class STATS_JOUEURS_ONLY {
     constructor(listeJoueurs) {
         this.nomPage = "Statistiques des Joueurs";
-        this.titre = "Statistiques de mes joueurs";
+        this.titre = "<a class='red-text'>Statistiques</a> de mes joueurs";
         this.description = "Consultez les performances individuelles de vos joueurs.";
         this.url_image = "img/joueurs.png";
         this.list_btn = [{ id: "page-stats", text: "Retour" }];
@@ -276,7 +276,7 @@ class STATS_JOUEURS_ONLY {
 class pageMatchResultats {
     constructor(match) {
         this.nomPage = "Résultats du Match";
-        this.titre = "Resultat du match";
+        this.titre = "<a class='red-text'>Résultat</a> du match";
         this.description = `Match entre ${match.Winner?.nom || "Inconnu"} et ${match.Loser?.nom || "Inconnu"}`;
         this.url_image = "img/score.png";
         this.list_btn = [

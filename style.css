@@ -127,6 +127,7 @@ header {
     height: 20px;
     background-color: var(--color-orange);
     border-radius: 50%;
+    border: 1px white solid;
 }
 
 .menu-profil__corps {
@@ -135,6 +136,7 @@ header {
     background-color: var(--color-orange);
     border-radius: 10px;
     margin-top: 5px;
+    border: 1px white solid;
 }
 
 /* Structurer la navigation */
