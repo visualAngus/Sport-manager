@@ -6,6 +6,28 @@
     --color-orange: #e84c13;
 }
 
+/* Appliquer le style de scrollbar à toute la page */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--color-orange);
+    border-radius: 999px;
+    border: 2px solid rgba(0, 0, 0, 0.3);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--color-red);
+}
+
+
+
 /* Normaliser le rendu global */
 * {
     box-sizing: border-box;
@@ -167,6 +189,7 @@ nav button:hover {
     flex-wrap: wrap;
     gap: 12px;
     align-items: center;
+    margin-top: 15px;
 }
 
 /* Styliser les boutons d'actions */
@@ -195,6 +218,9 @@ nav button:hover {
 #contenu-dynamique {
     padding: 20px;
     position: relative;
+    max-height: calc(100vh - 400px);
+    overflow: auto;
+
     z-index: 1;
 }
 

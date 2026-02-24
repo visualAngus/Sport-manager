@@ -196,6 +196,19 @@ const scoring = (id_equipe, points) => {
 
 // Simuler un match et persister le resultat
 const startMatch = async (id_equipe1, id_equipe2) => {
+
+    // verifier si il y a assez de joueurs disponibles (non blessés et titulaires) dans chaque équipe
+    const equipe1 = MapEquipes.get(id_equipe1);
+    const equipe2 = MapEquipes.get(id_equipe2);
+
+    const joueursDisponiblesEquipe1 = equipe1.listeJoueurs.filter(j => !j.isBlesse && j.isjoueurPrincipal);
+    const joueursDisponiblesEquipe2 = equipe2.listeJoueurs.filter(j => !j.isBlesse && j.isjoueurPrincipal);
+
+    if (joueursDisponiblesEquipe1.length < 5) {
+        alert("Votre équipe n'a pas assez de joueurs disponibles pour jouer le match. Veuillez soigner vos joueurs blessés ou ajouter de nouveaux joueurs.");
+        return { error: "Pas assez de joueurs disponibles dans l'équipe 1" };
+    }
+
     const matchResult = getMatchWinnerAndScore(id_equipe1, id_equipe2);
     const scoreEquipe1 = scoring(id_equipe1, matchResult.winScore);
     const scoreEquipe2 = scoring(id_equipe2, matchResult.LoseScore);
