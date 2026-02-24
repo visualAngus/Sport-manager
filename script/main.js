@@ -1,5 +1,5 @@
 import { orm } from "./orm.js";
-import { POSTE, JOUEUR, EQUIPE, MANAGER, MATCH, MENU, pageACCUEIL, pageEQUIPE, pageMATCH, pageSTATS, STATS_MATCH, GESTION_JOUEURS, GESTION_EQUIPE, STATS_EQUIPEONLY, STATS_JOUEURS_ONLY, ENTRAINEMENT, pageMatchResultats } from "./class.js";
+import { POSTE, JOUEUR, EQUIPE, MANAGER, MATCH, MENU, pageACCUEIL, pageEQUIPE, pageMATCH, pageSTATS, STATS_MATCH, GESTION_JOUEURS, GESTION_EQUIPE, STATS_EQUIPEONLY, STATS_JOUEURS_ONLY, ENTRAINEMENT, pageMatchResultats,pageAJOUTERJOUEUR } from "./class.js";
 
 
 // Centraliser les entites pour un acces rapide
@@ -247,7 +247,8 @@ const changerPosteJoueur = async (id_joueur, nouveauPoste) => {
 
     joueur.changementPoste(nouveauPoste);
 
-    await orm.update('JOUEURS', { poste: nouveauPoste }, 'id = ?', [id_joueur]);
+    // En DB on stocke un TEXT (pas l'instance POSTE)
+    await orm.update('JOUEURS', { poste: joueur.poste.poste }, 'id = ?', [id_joueur]);
 }
 
 // Basculer l'etat de blessure d'un joueur
@@ -329,5 +330,69 @@ const lancerEntrainement = async (id_equipe) => {
 
     return resultats;
 }
+// ajouter un nouveau joueur à l'équipe
+const ajouterJoueur = async (id_equipe, nom_joueur, force, vitesse, endurance, technique, poste_joueur) => {
+    const equipe = MapEquipes.get(id_equipe);
+    if (!equipe) throw new Error("Équipe non trouvée");
 
-export { init, getAllInfo, getOpponentEquipeId, calculPuissanceJoueur, getEquipeStats, startMatch, changerPosteJoueur, toggleBlessure, toggleTitulaire, changerNomEquipe, lancerEntrainement, MapJoueurs, MapEquipes, currentMenu, pageACCUEIL, pageEQUIPE, pageMATCH, pageSTATS, STATS_MATCH, GESTION_JOUEURS, GESTION_EQUIPE, STATS_EQUIPEONLY, STATS_JOUEURS_ONLY, ENTRAINEMENT,pageMatchResultats, mapMatches };
+    // Le constructeur JOUEUR attend un poste sous forme de string
+    const posteNom = poste_joueur?.poste ?? poste_joueur?.nom ?? poste_joueur;
+
+    // Normaliser une valeur pour SQLite (pas d'objets)
+    const toSqlValue = (v) => {
+        if (v === undefined) return null;
+        if (v === null) return null;
+        if (v instanceof Date) return v.toISOString();
+        if (typeof v === "object") {
+            // Cas fréquent: poste = { id, nom } ou similaire
+            if (typeof v.poste === "string") return v.poste;
+            if (typeof v.id === "number" || typeof v.id === "string") return v.id;
+            if (typeof v.nom === "string") return v.nom;
+            return JSON.stringify(v);
+        }
+        return v; // string | number | boolean
+    };
+
+    const newId = Date.now();
+    const nouveauJoueur = new JOUEUR(
+        newId,
+        nom_joueur,
+        posteNom,
+        false, // isjoueurPrincipal
+        false, // isBlesse
+        0, // points
+        0, // passes
+        0, // interceptions
+        0, // contres
+        Number(force),
+        Number(vitesse),
+        Number(endurance),
+        Number(technique)
+    );
+
+    // Ajouter le joueur à l'équipe + au cache central
+    equipe.listeJoueurs.push(nouveauJoueur);
+    MapJoueurs.set(nouveauJoueur.id, nouveauJoueur);
+
+    await orm.insert("JOUEURS", {
+        id: toSqlValue(nouveauJoueur.id),
+        nom: toSqlValue(nouveauJoueur.nom),
+        // En DB on stocke le nom du poste (TEXT), pas l'instance POSTE
+        poste: toSqlValue(nouveauJoueur.poste?.poste ?? nouveauJoueur.poste),
+        isjoueurPrincipal: 0,
+        isBlesse: 0,
+        points: toSqlValue(nouveauJoueur.points),
+        passes: toSqlValue(nouveauJoueur.passes),
+        interceptions: toSqlValue(nouveauJoueur.interceptions),
+        contres: toSqlValue(nouveauJoueur.contres),
+        force: toSqlValue(nouveauJoueur.force),
+        vitesse: toSqlValue(nouveauJoueur.vitesse),
+        endurance: toSqlValue(nouveauJoueur.endurance),
+        technique: toSqlValue(nouveauJoueur.technique),
+    });
+
+    const joueurIds = equipe.listeJoueurs.map((j) => j.id);
+    await orm.update("EQUIPES", { joueurs: JSON.stringify(joueurIds) }, "id = ?", [id_equipe]);
+};
+
+export { init, getAllInfo, getOpponentEquipeId, calculPuissanceJoueur, getEquipeStats, startMatch, changerPosteJoueur, toggleBlessure, toggleTitulaire, changerNomEquipe, lancerEntrainement, MapJoueurs, MapEquipes, currentMenu, pageACCUEIL, pageEQUIPE, pageMATCH, pageSTATS, STATS_MATCH, GESTION_JOUEURS, GESTION_EQUIPE, STATS_EQUIPEONLY, STATS_JOUEURS_ONLY, ENTRAINEMENT,pageMatchResultats, mapMatches,pageAJOUTERJOUEUR,ajouterJoueur };

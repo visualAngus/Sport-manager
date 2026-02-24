@@ -194,6 +194,18 @@ class pageSTATS {
     }
 }
 
+// Class de la page pour ajouter un joueur
+class pageAJOUTERJOUEUR {
+    constructor() {
+        this.nomPage = "Ajouter un Joueur";
+        this.titre = "<a class='red-text'>Ajouter</a> un nouveau joueur à votre équipe";
+        this.description =
+            "Remplissez les informations du joueur pour l'ajouter à votre équipe.";
+        this.url_image = "img/joueurs.png";
+        this.list_btn = [{ id: "page-gestion-joueurs", text: "Retour" }];
+    }
+}
+
 // Construire la page de gestion des joueurs
 class GESTION_JOUEURS {
     constructor(listeJoueurs) {
@@ -318,5 +330,6 @@ export {
     pageEQUIPE,
     pageMATCH,
     pageSTATS,
-    pageMatchResultats
+    pageMatchResultats,
+    pageAJOUTERJOUEUR,
 };

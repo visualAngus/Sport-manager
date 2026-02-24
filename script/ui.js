@@ -1,5 +1,5 @@
-import { init, getAllInfo, getOpponentEquipeId, calculPuissanceJoueur, getEquipeStats, startMatch, changerPosteJoueur, toggleBlessure, toggleTitulaire, changerNomEquipe, lancerEntrainement, MapJoueurs, MapEquipes, currentMenu, pageACCUEIL, pageEQUIPE, pageMATCH, pageSTATS, STATS_MATCH, GESTION_JOUEURS, GESTION_EQUIPE, STATS_EQUIPEONLY, STATS_JOUEURS_ONLY, ENTRAINEMENT, mapMatches,pageMatchResultats } from "./main.js";
-import { ORM } from "./orm.js";
+import { init, getAllInfo, getOpponentEquipeId, calculPuissanceJoueur, getEquipeStats, startMatch, changerPosteJoueur, toggleBlessure, toggleTitulaire, changerNomEquipe, lancerEntrainement, MapJoueurs, MapEquipes, currentMenu, pageACCUEIL, pageEQUIPE, pageMATCH, pageSTATS, STATS_MATCH, GESTION_JOUEURS, GESTION_EQUIPE, STATS_EQUIPEONLY, STATS_JOUEURS_ONLY, ENTRAINEMENT, mapMatches, pageMatchResultats, pageAJOUTERJOUEUR, ajouterJoueur } from "./main.js";
+import { orm } from "./orm.js";
 
 // Creer un bouton d'action contextuel
 function add_btn(id, text) {
@@ -45,6 +45,10 @@ async function changer_page(pageOrEvent) {
         case "mes-stats":
             pageId = "mes-stats";
             currentMenu.changerPage(new pageSTATS());
+            break;
+        case "ajouter-joueur":
+            currentMenu.changerPage(new pageAJOUTERJOUEUR());
+            console.log("Navigué vers la page d'ajout de joueur");
             break;
         case "planifier-match": {
             const { equipe } = getAllInfo();
@@ -150,7 +154,7 @@ const { manager } = getAllInfo();
 if (manager) {
     const managerNameElement = document.getElementById("nom_manager");
     if (managerNameElement) {
-        managerNameElement.textContent = `${manager.nom} ${manager.prenom}`; 
+        managerNameElement.textContent = `${manager.nom} ${manager.prenom}`;
     }
 }
 
@@ -196,7 +200,7 @@ function renderPageContent(page) {
             row.dataset.joueurId = joueur.id;
             const puissance = Math.round(calculPuissanceJoueur(joueur.id));
             const statut = joueur.isBlesse ? "Blessé" : (joueur.isjoueurPrincipal ? "Titulaire" : "Remplacant");
-            console.log(`Rendu du joueur`,joueur);
+            console.log(`Rendu du joueur`, joueur);
             row.innerHTML = `
                 <td>${joueur.nom}</td>
                 <td>
@@ -579,5 +583,73 @@ function renderPageContent(page) {
         panel.appendChild(listWrap);
         overlay.appendChild(panel);
         container.appendChild(overlay);
+    }
+
+    if (page?.nomPage === "Ajouter un Joueur") {
+        container.classList.add("page-overlay");
+
+        const overlay = document.createElement("div");
+        overlay.className = "team-overlay";
+
+        const panel = document.createElement("div");
+        panel.className = "team-overlay__panel";
+        panel.innerHTML = `
+            <div class="team-overlay__header">
+                <span class="team-overlay__kicker">Ajouter un Joueur</span>
+                <h3 class="team-overlay__title">${page.titre}</h3>
+                <p class="team-overlay__desc">${page.description}</p>
+            </div>
+            <form id="add-player-form" class="add-player-form">
+                <label for="player-name">Nom du joueur</label>
+                <input type="text" id="player-name" name="player-name" required />
+                
+                <label for="player-poste">Poste</label>
+                <select id="player-poste" name="player-poste" required>
+                    <option value="">Sélectionnez un poste</option>
+                    <option value="meneur">Meneur</option>
+                    <option value="arrière">Arrière</option>
+                    <option value="ailier">Ailier</option>
+                    <option value="ailier fort">Ailier Fort</option>
+                    <option value="pivot">Pivot</option>
+                </select>
+                
+                <button type="submit">Ajouter le joueur</button>
+            </form>
+        `;
+
+        panel.querySelector("#add-player-form").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const nameInput = panel.querySelector("#player-name");
+            const posteSelect = panel.querySelector("#player-poste");
+            const nom = nameInput.value.trim();
+            const poste = posteSelect.value;
+
+            if (!nom || !poste) {
+                alert("Veuillez remplir tous les champs.");
+                return;
+            };
+
+            const nouveauJoueurStats = {
+                force: Math.floor(Math.random() * 10) + 1,
+                vitesse: Math.floor(Math.random() * 10) + 1,
+                endurance: Math.floor(Math.random() * 10) + 1,
+                technique: Math.floor(Math.random() * 10) + 1
+            };
+
+            try {
+                const { equipe } = getAllInfo();
+                await ajouterJoueur(equipe.id, nom, nouveauJoueurStats.force, nouveauJoueurStats.vitesse, nouveauJoueurStats.endurance, nouveauJoueurStats.technique, poste);
+                alert(`Le joueur ${nom} a été ajouté à votre équipe !`);
+                changer_page("gerer-joueurs");
+            } catch (error) {
+                console.error("Erreur lors de l'ajout du joueur :", error);
+                alert("Une erreur est survenue lors de l'ajout du joueur. Veuillez réessayer.");
+            }
+
+        });
+
+        overlay.appendChild(panel);
+        container.appendChild(overlay);
+
     }
 }
