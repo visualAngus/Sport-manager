@@ -277,13 +277,17 @@ class pageMatchResultats {
     constructor(match) {
         this.nomPage = "Résultats du Match";
         this.titre = "<a class='red-text'>Résultat</a> du match";
-        this.description = `Match entre ${match.Winner?.nom || "Inconnu"} et ${match.Loser?.nom || "Inconnu"}`;
+        const winnerName = match?.Winner?.nom || "Inconnu";
+        const loserName = match?.Loser?.nom || "Inconnu";
+        this.description = match
+            ? `Match entre ${winnerName} et ${loserName}`
+            : "Aucun match sélectionné.";
         this.url_image = "img/score.png";
         this.list_btn = [
                     { id: "resultats-matchs", text: "Historique des matchs" },
                     { id: "page-match", text: "Retour aux matchs" },
                 ];
-        this.match_result = match;
+        this.match_result = match ?? null;
     }
 }
 
@@ -296,6 +300,13 @@ class MENU {
             new pageEQUIPE(),
             new pageMATCH(),
             new pageSTATS(),
+            new pageAJOUTERJOUEUR(),
+            new GESTION_JOUEURS([]),
+            new GESTION_EQUIPE(null, null),
+            new ENTRAINEMENT(null),
+            new pageStatsEquipeOnly(null, null),
+            new pageStatsJoueursOnly([]),
+            new pageMatchResultats(null),
         ];
     }
     changerPageByNom(nomPage) {

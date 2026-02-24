@@ -245,10 +245,17 @@ STATS_MATCH ..> MATCH : uses liste_matchs
 ' Pages spécialisées utilisant des données
 pageMatchResultats ..> MATCH : uses match_result
 
-' Navigation gère les pages principales
+' Navigation gère toutes les pages
 MENU ..> pageACCUEIL : manages
 MENU ..> pageEQUIPE : manages
 MENU ..> pageMATCH : manages
 MENU ..> pageSTATS : manages
+MENU ..> pageAJOUTERJOUEUR : manages
+MENU ..> GESTION_JOUEURS : manages
+MENU ..> GESTION_EQUIPE : manages
+MENU ..> ENTRAINEMENT : manages
+MENU ..> pageStatsEquipeOnly : manages
+MENU ..> pageStatsJoueursOnly : manages
+MENU ..> pageMatchResultats : manages
 
 @enduml
