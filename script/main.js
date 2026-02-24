@@ -1,5 +1,5 @@
 import { orm } from "./orm.js";
-import { POSTE, JOUEUR, EQUIPE, MANAGER, MATCH, MENU, pageACCUEIL, pageEQUIPE, pageMATCH, pageSTATS, STATS_MATCH, GESTION_JOUEURS, GESTION_EQUIPE, STATS_EQUIPEONLY, STATS_JOUEURS_ONLY, ENTRAINEMENT, pageMatchResultats,pageAJOUTERJOUEUR } from "./class.js";
+import { POSTE, JOUEUR, EQUIPE, MANAGER, MATCH, MENU, pageACCUEIL, pageEQUIPE, pageMATCH, pageSTATS, STATS_MATCH, GESTION_JOUEURS, GESTION_EQUIPE, pageStatsEquipeOnly, pageStatsJoueursOnly, ENTRAINEMENT, pageMatchResultats,pageAJOUTERJOUEUR } from "./class.js";
 
 
 // Centraliser les entites pour un acces rapide
@@ -408,4 +408,4 @@ const ajouterJoueur = async (id_equipe, nom_joueur, force, vitesse, endurance, t
     await orm.update("EQUIPES", { joueurs: JSON.stringify(joueurIds) }, "id = ?", [id_equipe]);
 };
 
-export { init, getAllInfo, getOpponentEquipeId, calculPuissanceJoueur, getEquipeStats, startMatch, changerPosteJoueur, toggleBlessure, toggleTitulaire, changerNomEquipe, lancerEntrainement, MapJoueurs, MapEquipes, currentMenu, pageACCUEIL, pageEQUIPE, pageMATCH, pageSTATS, STATS_MATCH, GESTION_JOUEURS, GESTION_EQUIPE, STATS_EQUIPEONLY, STATS_JOUEURS_ONLY, ENTRAINEMENT,pageMatchResultats, mapMatches,pageAJOUTERJOUEUR,ajouterJoueur };
+export { init, getAllInfo, getOpponentEquipeId, calculPuissanceJoueur, getEquipeStats, startMatch, changerPosteJoueur, toggleBlessure, toggleTitulaire, changerNomEquipe, lancerEntrainement, MapJoueurs, MapEquipes, currentMenu, pageACCUEIL, pageEQUIPE, pageMATCH, pageSTATS, STATS_MATCH, GESTION_JOUEURS, GESTION_EQUIPE, pageStatsEquipeOnly, pageStatsJoueursOnly, ENTRAINEMENT,pageMatchResultats, mapMatches,pageAJOUTERJOUEUR,ajouterJoueur };

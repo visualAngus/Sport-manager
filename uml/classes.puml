@@ -1,0 +1,254 @@
+@startuml Sport Manager - Diagramme de Classes
+
+skinparam classAttributeIconSize 0
+skinparam classFontSize 12
+skinparam packageFontSize 13
+skinparam backgroundColor #FAFAFA
+skinparam class {
+    BackgroundColor White
+    BorderColor #555555
+    HeaderBackgroundColor #DDDDDD
+}
+skinparam package {
+    BackgroundColor #F5F5FF
+    BorderColor #888888
+}
+
+' ==========================================
+' PACKAGE : Modèles métier (domain)
+' ==========================================
+package "Domaine Métier" #E8F4F8 {
+
+    class POSTE {
+        - liste_dispo_poste : String[]
+        + poste : String
+        --
+        + verifierPoste(poste : String) : String
+        + changementPoste(newPoste : String) : void
+    }
+
+    class JOUEUR {
+        + id : Number
+        + nom : String
+        + poste : POSTE
+        + isjoueurPrincipal : Boolean
+        + isBlesse : Boolean
+        + points : Number
+        + passes : Number
+        + interceptions : Number
+        + contres : Number
+        + force : Number
+        + vitesse : Number
+        + endurance : Number
+        + technique : Number
+        --
+        + changementPoste(newPosteName : String) : void
+    }
+
+    class EQUIPE {
+        + id : Number
+        + nom : String
+        + listeJoueurs : JOUEUR[]
+        + manager : Number
+        + matchJoues : Number
+        + victoires : Number
+    }
+
+    class MANAGER {
+        + id : Number
+        + nom : String
+        + prenom : String
+        + idEquipe : Number
+        + victoires : Number
+        + defaites : Number
+    }
+
+    class MATCH {
+        + id : Number
+        + Winner : EQUIPE
+        + Loser : EQUIPE
+        + date : Date
+        + scoreWinner : Number
+        + scoreLoser : Number
+        + scoreDetail : Object
+    }
+}
+
+' ==========================================
+' PACKAGE : Pages UI principales
+' ==========================================
+package "Pages Principales" #F0F8E8 {
+
+    class pageACCUEIL {
+        + nomPage : String
+        + titre : String
+        + description : String
+        + url_image : String
+        + list_btn : Object[]
+    }
+
+    class pageEQUIPE {
+        + nomPage : String
+        + titre : String
+        + description : String
+        + url_image : String
+        + list_btn : Object[]
+    }
+
+    class pageMATCH {
+        + nomPage : String
+        + titre : String
+        + description : String
+        + url_image : String
+        + list_btn : Object[]
+    }
+
+    class pageSTATS {
+        + nomPage : String
+        + titre : String
+        + description : String
+        + url_image : String
+        + list_btn : Object[]
+    }
+
+    class pageAJOUTERJOUEUR {
+        + nomPage : String
+        + titre : String
+        + description : String
+        + url_image : String
+        + list_btn : Object[]
+    }
+
+    class pageMatchResultats {
+        + nomPage : String
+        + titre : String
+        + description : String
+        + url_image : String
+        + list_btn : Object[]
+        + match_result : MATCH
+    }
+}
+
+' ==========================================
+' PACKAGE : Pages de gestion (éditables)
+' ==========================================
+package "Pages de Gestion" #FFF8E8 {
+
+    class GESTION_JOUEURS {
+        + nomPage : String
+        + titre : String
+        + description : String
+        + url_image : String
+        + list_btn : Object[]
+        + listeJoueurs : JOUEUR[]
+    }
+
+    class GESTION_EQUIPE {
+        + nomPage : String
+        + titre : String
+        + description : String
+        + url_image : String
+        + list_btn : Object[]
+        + equipe : EQUIPE
+        + stats : Object
+    }
+
+    class ENTRAINEMENT {
+        + nomPage : String
+        + titre : String
+        + description : String
+        + url_image : String
+        + list_btn : Object[]
+        + resultatsEntrainement : Object
+    }
+}
+
+' ==========================================
+' PACKAGE : Pages de statistiques (lecture seule)
+' ==========================================
+package "Pages Statistiques" #F8E8F8 {
+
+    class pageStatsEquipeOnly {
+        + nomPage : String
+        + titre : String
+        + description : String
+        + url_image : String
+        + list_btn : Object[]
+        + equipe : EQUIPE
+        + stats : Object
+        + readOnly : Boolean
+    }
+
+    class pageStatsJoueursOnly {
+        + nomPage : String
+        + titre : String
+        + description : String
+        + url_image : String
+        + list_btn : Object[]
+        + listeJoueurs : JOUEUR[]
+        + readOnly : Boolean
+    }
+
+    class STATS_MATCH {
+        + nomPage : String
+        + titre : String
+        + description : String
+        + url_image : String
+        + list_btn : Object[]
+        + liste_matchs_recents : MATCH[]
+        + derniers_matchs : MATCH[]
+        --
+        + calculerBilan(nomMonEquipe : String) : String
+    }
+}
+
+' ==========================================
+' PACKAGE : Navigation
+' ==========================================
+package "Navigation" #F8F0E8 {
+
+    class MENU {
+        + pageActuelle : Object
+        + pagesDisponibles : Object[]
+        --
+        + changerPageByNom(nomPage : String) : void
+        + changerPage(page : Object) : void
+    }
+}
+
+' ==========================================
+' RELATIONS
+' ==========================================
+
+' Composition : JOUEUR contient un POSTE
+JOUEUR *-- POSTE : poste
+
+' Agrégation : EQUIPE agrège des JOUEURs
+EQUIPE o-- "0..*" JOUEUR : listeJoueurs
+
+' Référence : EQUIPE référence un MANAGER par id
+EQUIPE ..> MANAGER : manager (id)
+
+' MATCH référence deux EQUIPEs
+MATCH --> EQUIPE : Winner
+MATCH --> EQUIPE : Loser
+
+' Pages de gestion utilisant des données
+GESTION_JOUEURS ..> JOUEUR : uses listeJoueurs
+GESTION_EQUIPE ..> EQUIPE : uses equipe
+
+' Pages de stats utilisant des données
+pageStatsEquipeOnly ..> EQUIPE : uses equipe
+pageStatsJoueursOnly ..> JOUEUR : uses listeJoueurs
+STATS_MATCH ..> MATCH : uses liste_matchs
+
+' Pages spécialisées utilisant des données
+pageMatchResultats ..> MATCH : uses match_result
+
+' Navigation gère les pages principales
+MENU ..> pageACCUEIL : manages
+MENU ..> pageEQUIPE : manages
+MENU ..> pageMATCH : manages
+MENU ..> pageSTATS : manages
+
+@enduml

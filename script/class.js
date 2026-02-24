@@ -247,7 +247,7 @@ class ENTRAINEMENT {
 }
 
 // Construire la page stats equipe en lecture seule
-class STATS_EQUIPEONLY {
+class pageStatsEquipeOnly {
     constructor(equipe, stats) {
         this.nomPage = "Statistiques de l'Équipe";
         this.titre = "<a class='red-text'>Statistiques</a> de mon équipe";
@@ -261,7 +261,7 @@ class STATS_EQUIPEONLY {
 }
 
 // Construire la page stats joueurs en lecture seule
-class STATS_JOUEURS_ONLY {
+class pageStatsJoueursOnly {
     constructor(listeJoueurs) {
         this.nomPage = "Statistiques des Joueurs";
         this.titre = "<a class='red-text'>Statistiques</a> de mes joueurs";
@@ -323,8 +323,8 @@ export {
     STATS_MATCH,
     GESTION_JOUEURS,
     GESTION_EQUIPE,
-    STATS_EQUIPEONLY,
-    STATS_JOUEURS_ONLY,
+    pageStatsEquipeOnly,
+    pageStatsJoueursOnly,
     ENTRAINEMENT,
     pageACCUEIL,
     pageEQUIPE,

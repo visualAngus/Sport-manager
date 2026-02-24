@@ -1,4 +1,4 @@
-import { init, getAllInfo, getOpponentEquipeId, calculPuissanceJoueur, getEquipeStats, startMatch, changerPosteJoueur, toggleBlessure, toggleTitulaire, changerNomEquipe, lancerEntrainement, MapJoueurs, MapEquipes, currentMenu, pageACCUEIL, pageEQUIPE, pageMATCH, pageSTATS, STATS_MATCH, GESTION_JOUEURS, GESTION_EQUIPE, STATS_EQUIPEONLY, STATS_JOUEURS_ONLY, ENTRAINEMENT, mapMatches, pageMatchResultats, pageAJOUTERJOUEUR, ajouterJoueur } from "./main.js";
+import { init, getAllInfo, getOpponentEquipeId, calculPuissanceJoueur, getEquipeStats, startMatch, changerPosteJoueur, toggleBlessure, toggleTitulaire, changerNomEquipe, lancerEntrainement, MapJoueurs, MapEquipes, currentMenu, pageACCUEIL, pageEQUIPE, pageMATCH, pageSTATS, STATS_MATCH, GESTION_JOUEURS, GESTION_EQUIPE, pageStatsEquipeOnly, pageStatsJoueursOnly, ENTRAINEMENT, mapMatches, pageMatchResultats, pageAJOUTERJOUEUR, ajouterJoueur } from "./main.js";
 import { orm } from "./orm.js";
 
 // Creer un bouton d'action contextuel
@@ -83,13 +83,13 @@ async function changer_page(pageOrEvent) {
         case "stats-equipe": {
             const { equipe: equipeStats } = getAllInfo();
             const statsEquipe = getEquipeStats(equipeStats.id);
-            const pageStatsEquipe = new STATS_EQUIPEONLY(equipeStats, statsEquipe);
+            const pageStatsEquipe = new pageStatsEquipeOnly(equipeStats, statsEquipe);
             currentMenu.changerPage(pageStatsEquipe);
             break;
         }
         case "stats-joueurs": {
             const { equipe: equipeJoueurs } = getAllInfo();
-            const pageStatsJoueurs = new STATS_JOUEURS_ONLY(equipeJoueurs.listeJoueurs);
+            const pageStatsJoueurs = new pageStatsJoueursOnly(equipeJoueurs.listeJoueurs);
             currentMenu.changerPage(pageStatsJoueurs);
             break;
         }

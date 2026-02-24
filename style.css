@@ -6,7 +6,6 @@
     --color-orange: #e84c13;
 }
 
-/* Appliquer le style de scrollbar à toute la page */
 ::-webkit-scrollbar {
     width: 10px;
 }
